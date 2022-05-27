@@ -1,0 +1,31 @@
+{
+  "name": "blaggo-blackbox",
+  "version": "1.0.0",
+  "description": "A Nodejs SDK that wraps the API Endpoints for Blaggo App.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist"
+  ],
+  "scripts": {
+    "prepublish": "pnpm run build",
+    "build": "tsc",
+    "test": "mocha --reporter spec --require ts-node/register 'src/**/*.test.ts'"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ava": "^4.2.0",
+    "typescript": "^4.7.2"
+  },
+  "dependencies": {
+    "@types/chai": "^4.3.1",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^17.0.35",
+    "chai": "^4.3.6",
+    "got": "11.8.3",
+    "mocha": "^10.0.0",
+    "ts-node": "^10.8.0"
+  }
+}
