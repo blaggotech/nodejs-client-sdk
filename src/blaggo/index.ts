@@ -2,7 +2,6 @@ import got from 'got';
 import { AuthenticationResponse } from './types';
 
 
-
 export async function Authenticate(url: string, username: string, password: string): Promise<AuthenticationResponse> {
   const response = await got.post(url, {
       json: {
