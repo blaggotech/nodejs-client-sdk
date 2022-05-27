@@ -1,16 +1,22 @@
 import { Authenticate } from "./blaggo";
 import { GetInboxMessages } from "./blackbox";
+import 'dotenv/config';
 
 import * as chai from 'chai';
 
 const expect = chai.expect;
 
 describe('Blackbox Test', () => {
-  const username = process.env["AUTH_USERNAME"] || "";
-  const password = process.env["AUTH_PASSWORD"] || "";
-  const auth_url = process.env["AUTH_URL"] || "";
-
   it('should get all inbox messages', async () => {
+		const username = process.env["AUTH_USERNAME"] || "";
+  	const password = process.env["AUTH_PASSWORD"] || "";
+  	const auth_url = process.env["AUTH_URL"] || "";
+		const blackbox_base_url = process.env["BLACKBOX_BASE_URL"] || "";
+
+
+		expect(username).to.not.be.empty;
+		expect(password).to.not.be.empty;
+		expect(auth_url).to.not.be.empty;
 
     // authenticate
     const response = await Authenticate(auth_url, username, password);
@@ -18,7 +24,7 @@ describe('Blackbox Test', () => {
     expect(response.data.tokens.access_token);
 
     const access_token = response.data.tokens.access_token;
-    const messagesResponse = await GetInboxMessages(auth_url, access_token);
+    const messagesResponse = await GetInboxMessages(`${blackbox_base_url}/inbox`, access_token);
 
     expect(messagesResponse).to.not.be.null;
     expect(messagesResponse.messages).to.not.be.empty;
