@@ -8,11 +8,10 @@ const expect = chai.expect;
 
 describe('Blackbox Test', () => {
   it('should get all inbox messages', async () => {
-		const username = process.env["AUTH_USERNAME"] || "";
+	  const username = process.env["AUTH_USERNAME"] || "";
   	const password = process.env["AUTH_PASSWORD"] || "";
   	const auth_url = process.env["AUTH_URL"] || "";
-		const blackbox_base_url = process.env["BLACKBOX_BASE_URL"] || "";
-
+	  const blackbox_base_url = process.env["BLACKBOX_BASE_URL"] || "";
 
 		expect(username).to.not.be.empty;
 		expect(password).to.not.be.empty;
