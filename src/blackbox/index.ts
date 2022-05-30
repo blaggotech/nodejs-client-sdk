@@ -51,3 +51,24 @@ export async function DeleteInboxMessages(url: string, blaggoToken: string): Pro
     }
   })
 }
+
+export async function UpdateInboxMessage(url: string, payload: number, blaggoToken: string): Promise<InboxResponse> {
+  const response = await got.patch(url, {
+    headers: {
+      Authorization: `Bearer ${blaggoToken}`
+    },
+    json: {
+      "status": payload
+    },
+  }).json();
+
+  return new Promise((resolve, reject) => {
+    try {
+      const responseString = JSON.stringify(response);
+      let authResponse: InboxResponse = JSON.parse(responseString);
+      return resolve(authResponse);
+    } catch (error) {
+      return reject(error);
+    }
+  })
+}
