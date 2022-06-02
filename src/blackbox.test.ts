@@ -1,5 +1,5 @@
 import { Authenticate } from "./blaggo";
-import { AddPayload, DeleteInboxMessages, GetInboxMessages, UpdateInboxMessage } from "./blackbox";
+import { AddPayload, DeleteInboxMessages, GetInboxMessages, GetPayload, UpdateInboxMessage } from "./blackbox";
 import 'dotenv/config';
 
 import * as chai from 'chai';
@@ -104,6 +104,29 @@ describe('Blackbox Test', () => {
     } as NewPayloadRequest
 
     const payloadResponse = await AddPayload(`${blackbox_base_url}/payloads`, payload, access_token);
+    expect(payloadResponse).to.not.be.null;
+    expect(payloadResponse).to.not.be.empty;
+  })
+
+  it('should get a payload using an id', async () => {
+    const username = process.env["AUTH_USERNAME"] || "";
+  	const password = process.env["AUTH_PASSWORD"] || "";
+  	const auth_url = process.env["AUTH_URL"] || "";
+	  const blackbox_base_url = process.env["BLACKBOX_BASE_URL"] || "";
+
+    expect(username).to.not.be.empty;
+		expect(password).to.not.be.empty;
+		expect(auth_url).to.not.be.empty;
+
+    const response = await Authenticate(auth_url, username, password);
+    expect(response).to.not.be.null;
+    expect(response.data.tokens.access_token);
+
+    const access_token = response.data.tokens.access_token;
+
+    const payloadId = "aaaaaaaaaaaa";
+
+    const payloadResponse = await GetPayload(`${blackbox_base_url}/payloads/${payloadId}`, access_token);
     expect(payloadResponse).to.not.be.null;
     expect(payloadResponse).to.not.be.empty;
   })

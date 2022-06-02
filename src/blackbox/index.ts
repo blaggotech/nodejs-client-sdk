@@ -94,3 +94,19 @@ export async function AddPayload(url: string, payload: NewPayloadRequest, blaggo
     }
   });
 }
+
+export async function GetPayload(url: string, blaggoToken: string): Promise<string> {
+  const response = await got.get(url, {
+    headers: {
+      Authorization: `Bearer ${blaggoToken}`
+    },
+  }).json();
+
+  return new Promise((resolve, reject) => {
+    try {
+      return resolve(JSON.stringify(response));
+    } catch (error) {
+      return reject(error);
+    }
+  });
+}
