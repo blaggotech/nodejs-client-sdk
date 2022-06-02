@@ -1,5 +1,5 @@
 import got from 'got';
-import { InboxResponse } from "./types";
+import { InboxResponse, NewPayloadRequest } from "./types";
 
 export async function GetInboxMessages(url: string, blaggoToken: string): Promise<InboxResponse> {
   const response = await got.get(url, {
@@ -71,4 +71,26 @@ export async function UpdateInboxMessage(url: string, payload: number, blaggoTok
       return reject(error);
     }
   })
+}
+
+export async function AddPayload(url: string, payload: NewPayloadRequest, blaggoToken: string): Promise<string> {
+  const response = await got.post(url, {
+    headers: {
+      Authorization: `Bearer ${blaggoToken}`
+    },
+    json: {
+      "aggregator_id": payload.aggregator_id,
+      "alias": payload.alias,
+      "customer_code": payload.customer_code,
+      "profile_id": payload.profile_id
+    },
+  }).json();
+
+  return new Promise((resolve, reject) => {
+    try {
+      return resolve(JSON.stringify(response));
+    } catch (error) {
+      return reject(error);
+    }
+  });
 }

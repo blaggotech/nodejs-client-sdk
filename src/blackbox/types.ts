@@ -42,3 +42,10 @@ export interface Credit {
   comaker_id: string
   merchant_id: string
 }
+
+export interface NewPayloadRequest {
+  aggregator_id: string
+  alias: string
+  customer_code: string
+  profile_id: string
+}
