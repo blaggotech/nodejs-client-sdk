@@ -1,7 +1,9 @@
 import got from 'got';
-import { InboxResponse } from "./types";
+import { InboxResponse, MessageParameters } from "./types";
 
-export async function GetInboxMessages(url: string, blaggoToken: string): Promise<InboxResponse> {
+export async function GetInboxMessages(params: MessageParameters, blaggoToken: string): Promise<InboxResponse> {
+  let url = buildUrl(params);
+
   const response = await got.get(url, {
     headers: {
       Authorization: `Bearer ${blaggoToken}`
@@ -19,22 +21,9 @@ export async function GetInboxMessages(url: string, blaggoToken: string): Promis
   })
 }
 
-// DeleteInboxMessages will delete a message inbox from a given:
-// id: string
-// sender_id: string
-// receiver_id: string
-// status: string {1-Sent, 2-Received, 3-Read, 4-Replied}
-// type: string {
-//   1-SubscriptionType,
-//   2-TransactionType,
-//   3-CreditType,
-//   4-BillingType,
-//   5-QRType,
-//   6-ReferralType,
-//   7-BroadcastType
-// }.
-// url = ${HOST}/inbox?id=${id}
-export async function DeleteInboxMessages(url: string, blaggoToken: string): Promise<InboxResponse> {
+export async function DeleteInboxMessages(params: MessageParameters, blaggoToken: string): Promise<InboxResponse> {
+  let url = buildUrl(params);
+
   const response = await got.delete(url, {
     headers: {
       Authorization: `Bearer ${blaggoToken}`
@@ -50,4 +39,15 @@ export async function DeleteInboxMessages(url: string, blaggoToken: string): Pro
       return reject(error);
     }
   })
+}
+
+function buildUrl(params: MessageParameters): string {
+  let baseUrl = `${process.env['BLACKBOX_BASE_URL']}/inbox`;
+
+  return `${baseUrl}?id=${params.id}&sender_id=${params.sender_id}
+    &sender_name=${params.sender_name}&receiver_id=${params.receiver_id}
+    &receiver_name=${params.receiver_name}&status=${params.status}
+    &type=${params.type}&types=${params.types}
+    &transaction_type=${params.transaction_type}&transaction_last_state_type=${params.transaction_last_state_type}
+    &includes=${params.includes}&page=${params.page}&per_page=${params.per_page}`;
 }

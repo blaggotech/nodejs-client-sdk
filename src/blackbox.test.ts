@@ -3,15 +3,19 @@ import { DeleteInboxMessages, GetInboxMessages } from "./blackbox";
 import 'dotenv/config';
 
 import * as chai from 'chai';
+import { MessageParameters } from "./blackbox/types";
 
 const expect = chai.expect;
+
+const testGetMessageParams = {
+  id: '111111111111111111111111111',
+} as MessageParameters;
 
 describe('Blackbox Test', () => {
   it('should get all inbox messages', async () => {
 	  const username = process.env["AUTH_USERNAME"] || "";
   	const password = process.env["AUTH_PASSWORD"] || "";
   	const auth_url = process.env["AUTH_URL"] || "";
-	  const blackbox_base_url = process.env["BLACKBOX_BASE_URL"] || "";
 
 		expect(username).to.not.be.empty;
 		expect(password).to.not.be.empty;
@@ -23,7 +27,8 @@ describe('Blackbox Test', () => {
     expect(response.data.tokens.access_token);
 
     const access_token = response.data.tokens.access_token;
-    const messagesResponse = await GetInboxMessages(`${blackbox_base_url}/inbox`, access_token);
+
+    const messagesResponse = await GetInboxMessages(testGetMessageParams, access_token);
 
     expect(messagesResponse).to.not.be.null;
     expect(messagesResponse.messages).to.not.be.empty;
@@ -34,7 +39,6 @@ describe('Blackbox Test', () => {
     const username = process.env["AUTH_USERNAME"] || "";
   	const password = process.env["AUTH_PASSWORD"] || "";
   	const auth_url = process.env["AUTH_URL"] || "";
-	  const blackbox_base_url = process.env["BLACKBOX_BASE_URL"] || "";
 
 		expect(username).to.not.be.empty;
 		expect(password).to.not.be.empty;
@@ -46,12 +50,18 @@ describe('Blackbox Test', () => {
     expect(response.data.tokens.access_token);
 
     const access_token = response.data.tokens.access_token;
+
     // get inbox message
-    const inboxResponse = await GetInboxMessages(`${blackbox_base_url}/inbox`, access_token);
+    const inboxResponse = await GetInboxMessages(testGetMessageParams, access_token);
     const inboxId = inboxResponse.messages[0]?.id;
     expect(inboxId).to.not.be.empty;
 
     // delete the inbox message
-    await DeleteInboxMessages(`${blackbox_base_url}/inbox?id=${inboxId}`, access_token);
+    const deleteParams = {
+      id: inboxId,
+      status: "1",
+    } as MessageParameters;
+
+    await DeleteInboxMessages(deleteParams, access_token);
   })
 })
