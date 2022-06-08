@@ -1,9 +1,9 @@
 import { Authenticate } from "./blaggo";
-import { DeleteInboxMessages, GetInboxMessages } from "./blackbox";
+import { DeleteInboxMessages, DeleteProtocolPayloads, GetInboxMessages } from "./blackbox";
 import 'dotenv/config';
 
 import * as chai from 'chai';
-import { MessageParameters } from "./blackbox/types";
+import { MessageParameters, PayloadParameters } from "./blackbox/types";
 
 const expect = chai.expect;
 
@@ -63,5 +63,28 @@ describe('Blackbox Test', () => {
     } as MessageParameters;
 
     await DeleteInboxMessages(deleteParams, access_token);
+  })
+
+  it('should delete protocol payload by a given protocol payload ID', async () => {
+    const username = process.env["AUTH_USERNAME"] || "";
+  	const password = process.env["AUTH_PASSWORD"] || "";
+  	const auth_url = process.env["AUTH_URL"] || "";
+
+		expect(username).to.not.be.empty;
+		expect(password).to.not.be.empty;
+		expect(auth_url).to.not.be.empty;
+
+    // authenticate
+    const response = await Authenticate(auth_url, username, password);
+    expect(response).to.not.be.null;
+    expect(response.data.tokens.access_token);
+
+    const access_token = response.data.tokens.access_token;
+
+    const deleteParams = {
+      id: '111111111111111111111111111',
+    } as PayloadParameters;
+
+    await DeleteProtocolPayloads(deleteParams, access_token);
   })
 })

@@ -14,6 +14,14 @@ export interface MessageParameters {
   per_page: number,
 }
 
+export interface PayloadParameters {
+  id: string,
+  profile_id: string,
+  status: string,
+  page: number,
+  per_page: number,
+}
+
 export interface InboxResponse {
   messages: Message[]
   count: number
