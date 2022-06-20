@@ -1,3 +1,19 @@
+export interface MessageParameters {
+  id: string,
+  sender_id: string,
+  sender_name: string,
+  receiver_id: string,
+  receiver_name: string,
+  status: string,
+  type: string,
+  types: string,
+  transaction_type: string,
+  transaction_last_state_type: string,
+  includes: string,
+  page: number,
+  per_page: number,
+}
+
 export interface InboxResponse {
   messages: Message[]
   count: number
