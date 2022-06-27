@@ -1,74 +1,116 @@
 import got from 'got';
-import { InboxResponse, MessageParameters } from "./types";
+import { Authenticate } from '../blaggo';
+import { AuthenticationResponse } from "../blaggo/types";
+import { getMessagesURL, InboxResponse, MessageParameters } from "./types";
+import 'dotenv/config';
 
-export async function GetInboxMessages(params: MessageParameters, blaggoToken: string): Promise<InboxResponse> {
-  let url = buildUrl(params);
+export class Blackbox {
+  username: string;
+  password: string;
+  blaggoAuthURL: string;
 
-  const response = await got.get(url, {
-    headers: {
-      Authorization: `Bearer ${blaggoToken}`
-    }
-  }).json();
+  authResponse: Promise<AuthenticationResponse>;
 
-  return new Promise((resolve, reject) => {
-    try {
-      const responseString = JSON.stringify(response);
-      let authResponse: InboxResponse = JSON.parse(responseString);
-      return resolve(authResponse);
-    } catch (error) {
-      return reject(error);
-    }
-  })
-}
+  constructor(username: string, password: string) {
+    this.blaggoAuthURL = "https://auth.blaggo.io/auth/";
+    this.username = username;
+    this.password = password;
 
-export async function DeleteInboxMessages(params: MessageParameters, blaggoToken: string): Promise<InboxResponse> {
-  let url = buildUrl(params);
+    this.authResponse = this._getAuthResponse();
+  }
 
-  const response = await got.delete(url, {
-    headers: {
-      Authorization: `Bearer ${blaggoToken}`
-    }
-  }).json();
+  async _getAuthResponse(): Promise<AuthenticationResponse> {
+    return await Authenticate(this.blaggoAuthURL, this.username, this.password);
+  }
 
-  return new Promise((resolve, reject) => {
-    try {
-      const responseString = JSON.stringify(response);
-      let authResponse: InboxResponse = JSON.parse(responseString);
-      return resolve(authResponse);
-    } catch (error) {
-      return reject(error);
-    }
-  })
-}
+  // messages
+  async deleteInboxMessage(params: MessageParameters): Promise<InboxResponse> {
+    const accessToken = (await this.authResponse).data.tokens.access_token;
 
-function buildUrl(params: MessageParameters): string {
-  let baseUrl = `${process.env['BLACKBOX_BASE_URL']}/inbox`;
+    const deleteMessageUrl = getMessagesURL(params)
+    console.log(deleteMessageUrl)
+    const deleteMessageResponse = await got.delete(deleteMessageUrl, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      }
+    }).json();
 
-  return `${baseUrl}?id=${params.id}&sender_id=${params.sender_id}
-    &sender_name=${params.sender_name}&receiver_id=${params.receiver_id}
-    &receiver_name=${params.receiver_name}&status=${params.status}
-    &type=${params.type}&types=${params.types}
-    &transaction_type=${params.transaction_type}&transaction_last_state_type=${params.transaction_last_state_type}
-    &includes=${params.includes}&page=${params.page}&per_page=${params.per_page}`;
-}
+    return new Promise((resolve, reject) => {
+      try {
+        const responseString = JSON.stringify(deleteMessageResponse);
+        let authResponse: InboxResponse = JSON.parse(responseString);
+        return resolve(authResponse);
+      } catch (error) {
+        return reject(error);
+      }
+    })
+  }
 
-export async function UpdateInboxMessage(url: string, payload: number, blaggoToken: string): Promise<InboxResponse> {
-  const response = await got.patch(url, {
-    headers: {
-      Authorization: `Bearer ${blaggoToken}`
-    },
-    json: {
-      "status": payload
-    },
-  }).json();
+  async getInboxMessages(params: MessageParameters): Promise<InboxResponse> {
+    const accessToken = (await this.authResponse).data.tokens.access_token;
 
-  return new Promise((resolve, reject) => {
-    try {
-      const responseString = JSON.stringify(response);
-      let authResponse: InboxResponse = JSON.parse(responseString);
-      return resolve(authResponse);
-    } catch (error) {
-      return reject(error);
-    }
-  })
+    const getMessagesUrl = getMessagesURL(params);
+    const getMessageResponse = await got.get(getMessagesUrl, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      }
+    }).json();
+
+    return new Promise((resolve, reject) => {
+      try {
+        const responseString = JSON.stringify(getMessageResponse);
+        let authResponse: InboxResponse = JSON.parse(responseString);
+        return resolve(authResponse);
+      } catch (error) {
+        return reject(error);
+      }
+    })
+  }
+
+  async updateInboxMessage(params: MessageParameters): Promise<InboxResponse> {
+    const accessToken = (await this.authResponse).data.tokens.access_token;
+
+    const baseUrl = `${process.env['BLACKBOX_BASE_URL']}/inbox`;
+    const updateMessageUrl = `${baseUrl}/${params.id}`;
+    const updateMessageResponse = await got.patch(updateMessageUrl, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      json: {
+        status: parseInt(params.status),
+      }
+    }).json();
+
+    return new Promise((resolve, reject) => {
+      try {
+        const responseString = JSON.stringify(updateMessageResponse);
+        let authResponse: InboxResponse = JSON.parse(responseString);
+        return resolve(authResponse);
+      } catch (error) {
+        return reject(error);
+      }
+    })
+  }
+
+  // payload
+  async deleteProtocolPayloads() {
+    const accessToken = (await this.authResponse).data.tokens.access_token;
+
+    const deletePayloadUrl = `${process.env['BLACKBOX_BASE_URL']}/payloads`;
+    const deletePayloadResponse = await got.delete(deletePayloadUrl, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      }
+    }).json();
+
+    return new Promise((resolve, reject) => {
+      try {
+        const responseString = JSON.stringify(deletePayloadResponse);
+        let authResponse: InboxResponse = JSON.parse(responseString);
+        return resolve(authResponse);
+      } catch (error) {
+        return reject(error);
+      }
+    })
+  }
 }
