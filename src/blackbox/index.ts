@@ -28,7 +28,6 @@ export class Blackbox {
     const accessToken = (await this.authResponse).data.tokens.access_token;
 
     const deleteMessageUrl = getMessagesURL(params)
-    console.log(deleteMessageUrl)
     const deleteMessageResponse = await got.delete(deleteMessageUrl, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
