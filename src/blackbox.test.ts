@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import { MessageParameters } from "./blackbox/types";
+import { MessageParameters, ProtocolPayloadParameters } from "./blackbox/types";
 import { Blackbox } from './blackbox';
 import 'dotenv/config';
 
@@ -10,7 +10,15 @@ const testGetMessageParams = {
   status: "0",
 } as MessageParameters;
 
-const testPayloadId = 1
+const testDeleteProtocolPayloadParams = {
+  id: 'aaaa11111111',
+} as ProtocolPayloadParameters;
+
+const testPayloadId = "11111"
+
+const getPayloadParams = {
+  id: testPayloadId,
+} as ProtocolPayloadParameters;
 
 const username = process.env["AUTH_USERNAME"] || "";
 const password = process.env["AUTH_PASSWORD"] || "";
@@ -38,8 +46,18 @@ describe('Blackbox Inbox Test', () => {
 });
 
 describe('Blackbox Payload Test', () => {
+  it('should delete protocol payload by a given id', async () => {
+    const deleteResponse = await blackboxInstance.deleteProtocolPayloads(testDeleteProtocolPayloadParams);
+    expect(deleteResponse).to.not.be.null;
+  })
+
   it('should get payload by a given ID', async () => {
-    const payloadResponse = await blackboxInstance.getPayloadById(testPayloadId);
+    const payloadResponse = await blackboxInstance.getPayloadById(getPayloadParams);
     expect(payloadResponse).to.not.be.null;
   })
+
+  it('should query protocol payloads by a given query params', async () => {
+    const queryResponse = await blackboxInstance.queryProtocolPayloads(getPayloadParams);
+    expect(queryResponse).to.not.be.null;
+  });
 });

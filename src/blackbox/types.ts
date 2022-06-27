@@ -5,6 +5,14 @@ export interface BlaggoCredentials {
   password: string;
 }
 
+export interface ProtocolPayloadParameters {
+  id: string;
+  status: number,
+  profile_id: string,
+  page: number,
+  per_page: number
+}
+
 export interface MessageParameters {
   id: string,
   sender_id: string,
@@ -66,12 +74,39 @@ export interface Credit {
   merchant_id: string
 }
 
+export function getPayloadsURL(params: ProtocolPayloadParameters): string {
+  const baseUrl = `${process.env['BLACKBOX_BASE_URL']}/payloads`;
+  let url = `${baseUrl}?`;
+
+  if (params.id) {
+    url = `${url}id=${params.id}`;
+  }
+
+  if (params.status) {
+    url = `${url}&status=${params.status}`;
+  }
+
+  if (params.profile_id) {
+    url = `${url}&profile_id=${params.profile_id}`;
+  }
+
+  if (params.page) {
+    url = `${url}&page=${params.page}`;
+  }
+
+  if (params.per_page) {
+    url = `${url}&per_page=${params.per_page}`;
+  }
+
+  return url
+}
+
 export function getMessagesURL(params: MessageParameters): string {
   const baseUrl = `${process.env['BLACKBOX_BASE_URL']}/inbox`;
   let url = `${baseUrl}?`;
 
   if (params.id) {
-    url = `${url}&id=${params.id}`;
+    url = `${url}id=${params.id}`;
   }
 
   if (params.sender_id) {

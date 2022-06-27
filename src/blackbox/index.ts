@@ -1,7 +1,7 @@
 import got from 'got';
 import { Authenticate } from '../blaggo';
 import { AuthenticationResponse } from "../blaggo/types";
-import { getMessagesURL, InboxResponse, MessageParameters } from "./types";
+import { getMessagesURL, getPayloadsURL, InboxResponse, MessageParameters, ProtocolPayloadParameters } from "./types";
 import 'dotenv/config';
 
 export class Blackbox {
@@ -92,11 +92,22 @@ export class Blackbox {
   }
 
   // payload
-  async deleteProtocolPayloads() {
+  async deleteProtocolPayloads(params: ProtocolPayloadParameters) {
     const accessToken = (await this.authResponse).data.tokens.access_token;
 
-    const deletePayloadUrl = `${process.env['BLACKBOX_BASE_URL']}/payloads`;
-    const deletePayloadResponse = await got.delete(deletePayloadUrl, {
+    const deletePayloadUrl = getPayloadsURL(params);
+    await got.delete(deletePayloadUrl, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      }
+    }).json();
+  }
+
+  async queryProtocolPayloads(params: ProtocolPayloadParameters): Promise<InboxResponse> {
+    const accessToken = (await this.authResponse).data.tokens.access_token;
+
+    const queryProtocolPayloadsURL = getPayloadsURL(params);
+    const queryProtocolPayloadsResponse = await got.get(queryProtocolPayloadsURL, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       }
@@ -104,7 +115,29 @@ export class Blackbox {
 
     return new Promise((resolve, reject) => {
       try {
-        const responseString = JSON.stringify(deletePayloadResponse);
+        const responseString = JSON.stringify(queryProtocolPayloadsResponse);
+        let authResponse: InboxResponse = JSON.parse(responseString);
+        return resolve(authResponse);
+      } catch (error) {
+        return reject(error);
+      }
+    })
+  }
+
+  async getPayloadById(params: ProtocolPayloadParameters): Promise<InboxResponse> {
+    const accessToken = (await this.authResponse).data.tokens.access_token;
+
+    const baseUrl = `${process.env['BLACKBOX_BASE_URL']}/payloads`;
+    const getPayloadURL = `${baseUrl}/${params.id}`;
+    const getPayloadResponse = await got.get(getPayloadURL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      }
+    }).json();
+
+    return new Promise((resolve, reject) => {
+      try {
+        const responseString = JSON.stringify(getPayloadResponse);
         let authResponse: InboxResponse = JSON.parse(responseString);
         return resolve(authResponse);
       } catch (error) {
