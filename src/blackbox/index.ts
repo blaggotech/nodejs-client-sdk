@@ -50,6 +50,8 @@ function buildUrl(params: MessageParameters): string {
     &type=${params.type}&types=${params.types}
     &transaction_type=${params.transaction_type}&transaction_last_state_type=${params.transaction_last_state_type}
     &includes=${params.includes}&page=${params.page}&per_page=${params.per_page}`;
+}
+
 export async function UpdateInboxMessage(url: string, payload: number, blaggoToken: string): Promise<InboxResponse> {
   const response = await got.patch(url, {
     headers: {
