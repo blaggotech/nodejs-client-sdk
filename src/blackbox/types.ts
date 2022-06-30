@@ -74,6 +74,44 @@ export interface Credit {
   merchant_id: string
 }
 
+export interface SubscriberParameters {
+  id: string
+  profile_id: string
+  aggregator_id: string
+  customer_code: string
+  status: string
+  page: number
+  per_page: number
+  includes: string
+}
+
+export interface SubscriberResponse {
+  accounts: Account[]
+}
+
+export interface Account {
+  id: string
+  profile_id: string
+  customer_code: string
+  aggregator_id: string
+  status: Status
+  created_at: string
+  updated_at: string
+  payload_id: string
+  metadata: Metadata
+  alias: string
+}
+
+export interface Status {
+  previous: string
+  current: string
+}
+
+export interface Metadata {
+  aggregator_name: string
+  profile_name: string
+}
+
 export function getPayloadsURL(params: ProtocolPayloadParameters): string {
   const baseUrl = `${process.env['BLACKBOX_BASE_URL']}/payloads`;
   let url = `${baseUrl}?`;
@@ -155,6 +193,49 @@ export function getMessagesURL(params: MessageParameters): string {
 
   if (params.per_page) {
     url = `${url}&per_page=${params.per_page}`;
+  }
+
+  return url
+}
+
+export function getSubscribersURL(params: SubscriberParameters): string {
+  const baseUrl = `${process.env['BLACKBOX_BASE_URL']}/accounts`;
+  let url = `${baseUrl}?`;
+
+  if (params === null) {
+    return baseUrl
+  }
+
+  if (params.id) {
+    url = `${url}id=${params.id}`;
+  }
+
+  if (params.profile_id) {
+    url = `${url}&profile_id=${params.profile_id}`;
+  }
+
+  if (params.aggregator_id) {
+    url = `${url}&aggregator_id=${params.aggregator_id}`;
+  }
+
+  if (params.customer_code) {
+    url = `${url}&customer_code=${params.customer_code}`;
+  }
+
+  if (params.status) {
+    url = `${url}&status=${params.status}`;
+  }
+
+  if (params.page) {
+    url = `${url}&page=${params.page}`;
+  }
+
+  if (params.per_page) {
+    url = `${url}&per_page=${params.per_page}`;
+  }
+
+  if (params.includes) {
+    url = `${url}&includes=${params.includes}`;
   }
 
   return url

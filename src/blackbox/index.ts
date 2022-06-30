@@ -1,7 +1,7 @@
 import got from 'got';
 import { Authenticate } from '../blaggo';
 import { AuthenticationResponse } from "../blaggo/types";
-import { getMessagesURL, getPayloadsURL, InboxResponse, MessageParameters, ProtocolPayloadParameters } from "./types";
+import { getMessagesURL, getPayloadsURL, getSubscribersURL, InboxResponse, MessageParameters, ProtocolPayloadParameters, SubscriberParameters, SubscriberResponse } from "./types";
 import 'dotenv/config';
 
 export class Blackbox {
@@ -23,7 +23,12 @@ export class Blackbox {
     return await Authenticate(this.blaggoAuthURL, this.username, this.password);
   }
 
-  // messages
+  /**
+   * MESSAGES Section
+   *
+   */
+
+  // https://blackboxtest.blaggo.io/docs#tag/Inbox/operation/DeleteMessages
   async deleteInboxMessage(params: MessageParameters): Promise<InboxResponse> {
     const accessToken = (await this.authResponse).data.tokens.access_token;
 
@@ -45,6 +50,7 @@ export class Blackbox {
     })
   }
 
+  // https://blackboxtest.blaggo.io/docs#tag/Inbox/operation/GetMessages
   async getInboxMessages(params: MessageParameters): Promise<InboxResponse> {
     const accessToken = (await this.authResponse).data.tokens.access_token;
 
@@ -66,6 +72,7 @@ export class Blackbox {
     })
   }
 
+  // https://blackboxtest.blaggo.io/docs#tag/Inbox/operation/UpdateMessage
   async updateInboxMessage(params: MessageParameters): Promise<InboxResponse> {
     const accessToken = (await this.authResponse).data.tokens.access_token;
 
@@ -91,7 +98,12 @@ export class Blackbox {
     })
   }
 
-  // payload
+  /**
+   * PAYLOADS Section
+   *
+   */
+
+  // https://blackboxtest.blaggo.io/docs#tag/Payload/operation/DeletePayloads
   async deleteProtocolPayloads(params: ProtocolPayloadParameters) {
     const accessToken = (await this.authResponse).data.tokens.access_token;
 
@@ -103,6 +115,7 @@ export class Blackbox {
     }).json();
   }
 
+  // https://blackboxtest.blaggo.io/docs#tag/Payload/operation/QueryPayloads
   async queryProtocolPayloads(params: ProtocolPayloadParameters): Promise<InboxResponse> {
     const accessToken = (await this.authResponse).data.tokens.access_token;
 
@@ -124,6 +137,11 @@ export class Blackbox {
     })
   }
 
+  // TODO::
+  // https://blackboxtest.blaggo.io/docs#tag/Payload/operation/AddPayload
+  async createProtocolPayload() {}
+
+  // https://blackboxtest.blaggo.io/docs#tag/Payload/operation/GetPayload
   async getPayloadById(params: ProtocolPayloadParameters): Promise<InboxResponse> {
     const accessToken = (await this.authResponse).data.tokens.access_token;
 
@@ -139,6 +157,56 @@ export class Blackbox {
       try {
         const responseString = JSON.stringify(getPayloadResponse);
         let authResponse: InboxResponse = JSON.parse(responseString);
+        return resolve(authResponse);
+      } catch (error) {
+        return reject(error);
+      }
+    })
+  }
+
+  /**
+   * ACCOUNTS Section
+   *
+   */
+
+  // https://blackboxtest.blaggo.io/docs#tag/Account/operation/QueryAccounts
+  async querySubscribers(params: SubscriberParameters): Promise<SubscriberResponse> {
+    const accessToken = (await this.authResponse).data.tokens.access_token;
+
+    const querySubscribersURL = getSubscribersURL(params);
+    const querySubscribersResponse = await got.get(querySubscribersURL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      }
+    }).json();
+
+    return new Promise((resolve, reject) => {
+      try {
+        const responseString = JSON.stringify(querySubscribersResponse);
+        let authResponse: SubscriberResponse = JSON.parse(responseString);
+        return resolve(authResponse);
+      } catch (error) {
+        return reject(error);
+      }
+    })
+  }
+
+  // https://blackboxtest.blaggo.io/docs#tag/Account/operation/DeleteAccount
+  async deleteSubscriber(id: string): Promise<SubscriberResponse> {
+    const accessToken = (await this.authResponse).data.tokens.access_token;
+
+    const baseUrl = `${process.env['BLACKBOX_BASE_URL']}/accounts`;
+    const deleteSubscriberURL = `${baseUrl}/${id}`;
+    const deleteSubscriberResponse = await got.delete(deleteSubscriberURL, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      }
+    }).json();
+
+    return new Promise((resolve, reject) => {
+      try {
+        const responseString = JSON.stringify(deleteSubscriberResponse);
+        let authResponse: SubscriberResponse = JSON.parse(responseString);
         return resolve(authResponse);
       } catch (error) {
         return reject(error);

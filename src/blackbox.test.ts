@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import { MessageParameters, ProtocolPayloadParameters } from "./blackbox/types";
+import { MessageParameters, ProtocolPayloadParameters, SubscriberParameters } from "./blackbox/types";
 import { Blackbox } from './blackbox';
 import 'dotenv/config';
 
@@ -32,32 +32,46 @@ describe('Blackbox Inbox Test', () => {
     expect(messages).to.not.be.null;
     expect(messages.messages).to.not.be.null;
     expect(messages.count).to.be.equal(0);
-  });
+  }).timeout(1000);
 
   it('should update inbox message', async () => {
     const response = await blackboxInstance.updateInboxMessage(testGetMessageParams);
     expect(response).to.not.be.null;
-  });
+  }).timeout(1000);
 
   it('should delete inbox message', async () => {
     const response = await blackboxInstance.deleteInboxMessage(testGetMessageParams);
     expect(response).to.not.be.null;
-  });
+  }).timeout(1000);
 });
 
 describe('Blackbox Payload Test', () => {
   it('should delete protocol payload by a given id', async () => {
     const deleteResponse = await blackboxInstance.deleteProtocolPayloads(testDeleteProtocolPayloadParams);
     expect(deleteResponse).to.not.be.null;
-  })
+  }).timeout(1000);
 
   it('should get payload by a given ID', async () => {
     const payloadResponse = await blackboxInstance.getPayloadById(getPayloadParams);
     expect(payloadResponse).to.not.be.null;
-  })
+  }).timeout(1000);
 
   it('should query protocol payloads by a given query params', async () => {
     const queryResponse = await blackboxInstance.queryProtocolPayloads(getPayloadParams);
     expect(queryResponse).to.not.be.null;
-  });
+  }).timeout(1000);
+});
+
+describe('Blackbox Account/Subscribers Test', () => {
+  it('should get account info', async () => {
+    const subscriberParams = {} as SubscriberParameters;
+    const accountInfo = await blackboxInstance.querySubscribers(subscriberParams);
+    expect(accountInfo).to.not.be.null;
+  }).timeout(1000);
+
+  it('should delete subscriber', async () => {
+    const id = "111111111111111111111111111";
+    const deleteRespose = await blackboxInstance.deleteSubscriber(id);
+    expect(deleteRespose).to.not.be.null;
+  }).timeout(1000);
 });
