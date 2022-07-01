@@ -13,15 +13,17 @@ describe('Blaggo Authentication', () => {
 	expect(password).to.not.be.empty;
 	expect(auth_url).to.not.be.empty;
 
-  it('should return a response if correct credentials are passed' , async () => {
+  it('should return a response if correct credentials are passed' , async (done) => {
     const response = await Authenticate(auth_url, username, password);
     expect(response).to.not.be.null;
-  });
+    done();
+  }).timeout(10000);
 
-  it('should return auth tokens', async () => {
+  it('should return auth tokens', async (done) => {
     const response = await Authenticate(auth_url, username, password);
     expect(response.data.token).to.not.be.empty;
     expect(response.data.tokens.access_token).to.not.be.empty;
-  });
+    done();
+  }).timeout(10000);
 });
 
