@@ -7,7 +7,7 @@ specifiers:
   ava: ^4.2.0
   chai: ^4.3.6
   dotenv: ^16.0.1
-  got: 11.8.3
+  got: 11.8.5
   mocha: ^10.0.0
   ts-node: ^10.8.0
   typescript: ^4.7.2
@@ -18,7 +18,7 @@ dependencies:
   '@types/node': 17.0.35
   chai: 4.3.6
   dotenv: 16.0.1
-  got: 11.8.3
+  got: 11.8.5
   mocha: 10.0.0
   ts-node: 10.8.0_smgpfffxrhk5i4ijhe3532b4hq
 
@@ -456,7 +456,7 @@ packages:
       wrap-ansi: 7.0.0
 
   /clone-response/1.0.2:
-    resolution: {integrity: sha1-0dyXOSAxTfZ/vrlCI7TuNQI56Ws=}
+    resolution: {integrity: sha512-yjLXh88P599UOyPTFX0POsd7WxnbsVsGohcwzHOLspIhhpalPw1BcqED8NblyZLKcGrL8dTgMlcaZxV2jAD41Q==}
     dependencies:
       mimic-response: 1.0.1
     dev: false
@@ -798,8 +798,8 @@ packages:
       slash: 4.0.0
     dev: true
 
-  /got/11.8.3:
-    resolution: {integrity: sha512-7gtQ5KiPh1RtGS9/Jbv1ofDpBFuq42gyfEib+ejaRBJuj/3tQFeR5+gw57e4ipaU8c/rCjvX6fkQz2lyDlGAOg==}
+  /got/11.8.5:
+    resolution: {integrity: sha512-o0Je4NvQObAuZPHLFoRSkdG2lTgtcynqymzg2Vupdx6PorhaT5MCbIyXG6d4D94kk8ZG57QeosgdiqfJWhEhlQ==}
     engines: {node: '>=10.19.0'}
     dependencies:
       '@sindresorhus/is': 4.6.0
