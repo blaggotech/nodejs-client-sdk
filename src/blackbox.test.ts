@@ -1,9 +1,7 @@
 import * as chai from 'chai';
-import { Credentials, MessageParameters, ProtocolPayloadParameters, SubscriberParameters } from "./blackbox/types";
+import { Credentials, MessageParameters, Options, ProtocolPayloadParameters, SubscriberParameters } from "./blackbox/types";
 import { Blackbox } from './blackbox';
 import 'dotenv/config';
-import { AuthenticationResponse } from './blaggo/types';
-import got from 'got/dist/source';
 
 const expect = chai.expect;
 
@@ -26,7 +24,6 @@ const username = process.env["AUTH_USERNAME"] || "";
 const password = process.env["AUTH_PASSWORD"] || "";
 
 const credentials = {
-  authURL: "https://auth.blaggo.io/auth/",
   username: username,
   password: password,
 } as Credentials;
@@ -35,26 +32,12 @@ describe('Blackbox Inbox Test', () => {
   let blackboxInstance: Blackbox;
   // before each test, create a new instance of Blackbox
   beforeEach(async () => {
-    async function authenticator(url: string, credentials: Credentials): Promise<AuthenticationResponse> {
-      const response = await got.post(url, {
-        json: {
-          username: credentials.username,
-          password: credentials.password,
-        }
-      }).json();
+    const options = {
+      authURL: "https://auth.blaggo.io/auth/",
+      credentials: credentials,
+    } as Options;
 
-      return new Promise((resolve, reject) => {
-        try {
-          const responseString = JSON.stringify(response);
-          let authResponse: AuthenticationResponse = JSON.parse(responseString);
-          return resolve(authResponse);
-        } catch (error) {
-          return reject(error);
-        }
-      });
-    }
-
-    blackboxInstance = new Blackbox(credentials, authenticator);
+    blackboxInstance = new Blackbox(options);
   })
 
   it('should get all inbox messages', () => {
@@ -98,26 +81,12 @@ describe('Blackbox Payload Test', () => {
   let blackboxInstance: Blackbox;
 
   beforeEach(async () => {
-    async function authenticator(url: string, credentials: Credentials): Promise<AuthenticationResponse> {
-      const response = await got.post(url, {
-        json: {
-          username: credentials.username,
-          password: credentials.password,
-        }
-      }).json();
+    const options = {
+      authURL: "https://auth.blaggo.io/auth/",
+      credentials: credentials,
+    } as Options;
 
-      return new Promise((resolve, reject) => {
-        try {
-          const responseString = JSON.stringify(response);
-          let authResponse: AuthenticationResponse = JSON.parse(responseString);
-          return resolve(authResponse);
-        } catch (error) {
-          return reject(error);
-        }
-      });
-    }
-
-    blackboxInstance = new Blackbox(credentials, authenticator);
+    blackboxInstance = new Blackbox(options);
   })
 
   it('should delete protocol payload by a given id', () => {
@@ -164,26 +133,12 @@ describe('Blackbox Account/Subscribers Test', () => {
   let blackboxInstance: Blackbox;
 
   beforeEach(async () => {
-    async function authenticator(url: string, credentials: Credentials): Promise<AuthenticationResponse> {
-      const response = await got.post(url, {
-        json: {
-          username: credentials.username,
-          password: credentials.password,
-        }
-      }).json();
+    const options = {
+      authURL: "https://auth.blaggo.io/auth/",
+      credentials: credentials,
+    } as Options;
 
-      return new Promise((resolve, reject) => {
-        try {
-          const responseString = JSON.stringify(response);
-          let authResponse: AuthenticationResponse = JSON.parse(responseString);
-          return resolve(authResponse);
-        } catch (error) {
-          return reject(error);
-        }
-      });
-    }
-
-    blackboxInstance = new Blackbox(credentials, authenticator);
+    blackboxInstance = new Blackbox(options);
   })
 
   it('should get account info', () => {

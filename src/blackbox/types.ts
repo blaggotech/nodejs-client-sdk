@@ -1,8 +1,13 @@
 import 'dotenv/config';
 import { AuthenticationResponse } from '../blaggo/types';
 
+export interface Options {
+  authURL: string
+  credentials: Credentials
+  authenticatorFn: Authenticator
+}
+
 export interface Credentials {
-  authURL: string;
   username: string;
   password: string;
 }

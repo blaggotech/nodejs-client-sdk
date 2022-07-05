@@ -1,6 +1,6 @@
 import * as chai from 'chai';
 import got from 'got/dist/source';
-import { Authenticator, Credentials } from './blackbox/types';
+import { Authenticator, Credentials, Options } from './blackbox/types';
 import { AuthenticationResponse } from './blaggo/types';
 import 'dotenv/config';
 
@@ -10,15 +10,19 @@ const username = process.env["AUTH_USERNAME"] || "";
 const password = process.env["AUTH_PASSWORD"] || "";
 
 const credentials = {
-  authURL: "https://auth.blaggo.io/auth/",
   username: username,
   password: password,
 } as Credentials;
 
+const options = {
+  authURL: "https://auth.blaggo.io/auth/",
+  credentials: credentials,
+} as Options;
+
 describe('Blaggo Authentication', () => {
   expect(credentials.username).to.not.be.empty;
 	expect(credentials.password).to.not.be.empty;
-	expect(credentials.authURL).to.not.be.empty;
+	expect(options.authURL).to.not.be.empty;
 
   let authenticator: Authenticator;
   beforeEach(async () => {
@@ -40,12 +44,13 @@ describe('Blaggo Authentication', () => {
         }
       });
     }
+    options.authenticatorFn = authenticator;
   })
 
 
   it('should return a response if correct credentials are passed' , () => {
     return new Promise((resolve, reject) => {
-      authenticator(credentials.authURL, credentials)
+      authenticator(options.authURL, credentials)
         .then(response => {
           expect(response).to.not.be.null;
           resolve(response);
@@ -57,7 +62,7 @@ describe('Blaggo Authentication', () => {
 
   it('should return auth tokens', () => {
     return new Promise((resolve, reject) => {
-      authenticator(credentials.authURL, credentials)
+      authenticator(options.authURL, credentials)
         .then(response => {
           expect(response).to.not.be.null;
           expect(response.data.tokens.access_token).to.not.be.empty;
