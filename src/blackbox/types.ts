@@ -1,6 +1,8 @@
 import 'dotenv/config';
+import { AuthenticationResponse } from '../blaggo/types';
 
-export interface BlaggoCredentials {
+export interface Credentials {
+  authURL: string;
   username: string;
   password: string;
 }
@@ -111,6 +113,8 @@ export interface Metadata {
   aggregator_name: string
   profile_name: string
 }
+
+export type Authenticator = (url: string, credentials: Credentials) => Promise<AuthenticationResponse>;
 
 export function getPayloadsURL(params: ProtocolPayloadParameters): string {
   const baseUrl = `${process.env['BLACKBOX_BASE_URL']}/payloads`;

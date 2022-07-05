@@ -1,26 +1,15 @@
 import got from 'got';
-import { Authenticate } from '../blaggo';
-import { AuthenticationResponse } from "../blaggo/types";
-import { getMessagesURL, getPayloadsURL, getSubscribersURL, InboxResponse, MessageParameters, ProtocolPayloadParameters, SubscriberParameters, SubscriberResponse } from "./types";
+import { Authenticator, Credentials, getMessagesURL, getPayloadsURL, getSubscribersURL, InboxResponse, MessageParameters, ProtocolPayloadParameters, SubscriberParameters, SubscriberResponse } from "./types";
 import 'dotenv/config';
 
 export class Blackbox {
-  username: string;
-  password: string;
-  blaggoAuthURL: string;
 
-  authResponse: Promise<AuthenticationResponse>;
+  credentials: Credentials;
+  authenticator: Authenticator;
 
-  constructor(username: string, password: string) {
-    this.blaggoAuthURL = "https://auth.blaggo.io/auth/";
-    this.username = username;
-    this.password = password;
-
-    this.authResponse = this._getAuthResponse();
-  }
-
-  async _getAuthResponse(): Promise<AuthenticationResponse> {
-    return await Authenticate(this.blaggoAuthURL, this.username, this.password);
+  constructor(credentials: Credentials, authFn: Authenticator) {
+    this.credentials = credentials;
+    this.authenticator = authFn;
   }
 
   /**
@@ -30,7 +19,8 @@ export class Blackbox {
 
   // https://blackboxtest.blaggo.io/docs#tag/Inbox/operation/DeleteMessages
   async deleteInboxMessage(params: MessageParameters): Promise<InboxResponse> {
-    const accessToken = (await this.authResponse).data.tokens.access_token;
+    const authenticate = await this.authenticator(this.credentials.authURL, this.credentials);
+    const accessToken = authenticate.data.tokens.access_token;
 
     const deleteMessageUrl = getMessagesURL(params)
     const deleteMessageResponse = await got.delete(deleteMessageUrl, {
@@ -52,7 +42,8 @@ export class Blackbox {
 
   // https://blackboxtest.blaggo.io/docs#tag/Inbox/operation/GetMessages
   async getInboxMessages(params: MessageParameters): Promise<InboxResponse> {
-    const accessToken = (await this.authResponse).data.tokens.access_token;
+    const authenticate = await this.authenticator(this.credentials.authURL, this.credentials);
+    const accessToken = authenticate.data.tokens.access_token;
 
     const getMessagesUrl = getMessagesURL(params);
     const getMessageResponse = await got.get(getMessagesUrl, {
@@ -74,7 +65,8 @@ export class Blackbox {
 
   // https://blackboxtest.blaggo.io/docs#tag/Inbox/operation/UpdateMessage
   async updateInboxMessage(params: MessageParameters): Promise<InboxResponse> {
-    const accessToken = (await this.authResponse).data.tokens.access_token;
+    const authenticate = await this.authenticator(this.credentials.authURL, this.credentials);
+    const accessToken = authenticate.data.tokens.access_token;
 
     const baseUrl = `${process.env['BLACKBOX_BASE_URL']}/inbox`;
     const updateMessageUrl = `${baseUrl}/${params.id}`;
@@ -105,7 +97,8 @@ export class Blackbox {
 
   // https://blackboxtest.blaggo.io/docs#tag/Payload/operation/DeletePayloads
   async deleteProtocolPayloads(params: ProtocolPayloadParameters) {
-    const accessToken = (await this.authResponse).data.tokens.access_token;
+    const authenticate = await this.authenticator(this.credentials.authURL, this.credentials);
+    const accessToken = authenticate.data.tokens.access_token;
 
     const deletePayloadUrl = getPayloadsURL(params);
     await got.delete(deletePayloadUrl, {
@@ -117,7 +110,8 @@ export class Blackbox {
 
   // https://blackboxtest.blaggo.io/docs#tag/Payload/operation/QueryPayloads
   async queryProtocolPayloads(params: ProtocolPayloadParameters): Promise<InboxResponse> {
-    const accessToken = (await this.authResponse).data.tokens.access_token;
+    const authenticate = await this.authenticator(this.credentials.authURL, this.credentials);
+    const accessToken = authenticate.data.tokens.access_token;
 
     const queryProtocolPayloadsURL = getPayloadsURL(params);
     const queryProtocolPayloadsResponse = await got.get(queryProtocolPayloadsURL, {
@@ -143,7 +137,8 @@ export class Blackbox {
 
   // https://blackboxtest.blaggo.io/docs#tag/Payload/operation/GetPayload
   async getPayloadById(params: ProtocolPayloadParameters): Promise<InboxResponse> {
-    const accessToken = (await this.authResponse).data.tokens.access_token;
+    const authenticate = await this.authenticator(this.credentials.authURL, this.credentials);
+    const accessToken = authenticate.data.tokens.access_token;
 
     const baseUrl = `${process.env['BLACKBOX_BASE_URL']}/payloads`;
     const getPayloadURL = `${baseUrl}/${params.id}`;
@@ -171,7 +166,8 @@ export class Blackbox {
 
   // https://blackboxtest.blaggo.io/docs#tag/Account/operation/QueryAccounts
   async querySubscribers(params: SubscriberParameters): Promise<SubscriberResponse> {
-    const accessToken = (await this.authResponse).data.tokens.access_token;
+    const authenticate = await this.authenticator(this.credentials.authURL, this.credentials);
+    const accessToken = authenticate.data.tokens.access_token;
 
     const querySubscribersURL = getSubscribersURL(params);
     const querySubscribersResponse = await got.get(querySubscribersURL, {
@@ -193,7 +189,8 @@ export class Blackbox {
 
   // https://blackboxtest.blaggo.io/docs#tag/Account/operation/DeleteAccount
   async deleteSubscriber(id: string): Promise<SubscriberResponse> {
-    const accessToken = (await this.authResponse).data.tokens.access_token;
+    const authenticate = await this.authenticator(this.credentials.authURL, this.credentials);
+    const accessToken = authenticate.data.tokens.access_token;
 
     const baseUrl = `${process.env['BLACKBOX_BASE_URL']}/accounts`;
     const deleteSubscriberURL = `${baseUrl}/${id}`;

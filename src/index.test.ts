@@ -1,29 +1,71 @@
-import { Authenticate } from "./blaggo";
-
 import * as chai from 'chai';
+import got from 'got/dist/source';
+import { Authenticator, Credentials } from './blackbox/types';
+import { AuthenticationResponse } from './blaggo/types';
+import 'dotenv/config';
 
 const expect = chai.expect;
 
+const username = process.env["AUTH_USERNAME"] || "";
+const password = process.env["AUTH_PASSWORD"] || "";
+
+const credentials = {
+  authURL: "https://auth.blaggo.io/auth/",
+  username: username,
+  password: password,
+} as Credentials;
+
 describe('Blaggo Authentication', () => {
-  const username = process.env["AUTH_USERNAME"] || "";
-  const password = process.env["AUTH_PASSWORD"] || "";
-  const auth_url = process.env["AUTH_URL"] || "";
+  expect(credentials.username).to.not.be.empty;
+	expect(credentials.password).to.not.be.empty;
+	expect(credentials.authURL).to.not.be.empty;
 
-	expect(username).to.not.be.empty;
-	expect(password).to.not.be.empty;
-	expect(auth_url).to.not.be.empty;
+  let authenticator: Authenticator;
+  beforeEach(async () => {
+    authenticator = async (url: string, credentials: Credentials): Promise<AuthenticationResponse> => {
+      const response = await got.post(url, {
+        json: {
+          username: credentials.username,
+          password: credentials.password,
+        }
+      }).json();
 
-  it('should return a response if correct credentials are passed' , async (done) => {
-    const response = await Authenticate(auth_url, username, password);
-    expect(response).to.not.be.null;
-    done();
-  }).timeout(10000);
+      return new Promise((resolve, reject) => {
+        try {
+          const responseString = JSON.stringify(response);
+          let authResponse: AuthenticationResponse = JSON.parse(responseString);
+          return resolve(authResponse);
+        } catch (error) {
+          return reject(error);
+        }
+      });
+    }
+  })
 
-  it('should return auth tokens', async (done) => {
-    const response = await Authenticate(auth_url, username, password);
-    expect(response.data.token).to.not.be.empty;
-    expect(response.data.tokens.access_token).to.not.be.empty;
-    done();
-  }).timeout(10000);
+
+  it('should return a response if correct credentials are passed' , () => {
+    return new Promise((resolve, reject) => {
+      authenticator(credentials.authURL, credentials)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        }).catch(error => {
+          reject(error);
+        });
+    });
+  });
+
+  it('should return auth tokens', () => {
+    return new Promise((resolve, reject) => {
+      authenticator(credentials.authURL, credentials)
+        .then(response => {
+          expect(response).to.not.be.null;
+          expect(response.data.tokens.access_token).to.not.be.empty;
+          resolve(response);
+        }).catch(error => {
+          reject(error);
+        });
+    });
+  });
 });
 

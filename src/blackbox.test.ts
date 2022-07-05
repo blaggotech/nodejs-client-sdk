@@ -1,7 +1,9 @@
 import * as chai from 'chai';
-import { MessageParameters, ProtocolPayloadParameters, SubscriberParameters } from "./blackbox/types";
+import { Credentials, MessageParameters, ProtocolPayloadParameters, SubscriberParameters } from "./blackbox/types";
 import { Blackbox } from './blackbox';
 import 'dotenv/config';
+import { AuthenticationResponse } from './blaggo/types';
+import got from 'got/dist/source';
 
 const expect = chai.expect;
 
@@ -23,63 +25,194 @@ const getPayloadParams = {
 const username = process.env["AUTH_USERNAME"] || "";
 const password = process.env["AUTH_PASSWORD"] || "";
 
-
-const blackboxInstance = new Blackbox(username, password);
+const credentials = {
+  authURL: "https://auth.blaggo.io/auth/",
+  username: username,
+  password: password,
+} as Credentials;
 
 describe('Blackbox Inbox Test', () => {
-  it('should get all inbox messages', async (done) => {
-    const messages = await blackboxInstance.getInboxMessages(testGetMessageParams);
-    expect(messages).to.not.be.null;
-    expect(messages.messages).to.not.be.null;
-    expect(messages.count).to.be.equal(0);
-    done();
+  let blackboxInstance: Blackbox;
+  // before each test, create a new instance of Blackbox
+  beforeEach(async () => {
+    async function authenticator(url: string, credentials: Credentials): Promise<AuthenticationResponse> {
+      const response = await got.post(url, {
+        json: {
+          username: credentials.username,
+          password: credentials.password,
+        }
+      }).json();
+
+      return new Promise((resolve, reject) => {
+        try {
+          const responseString = JSON.stringify(response);
+          let authResponse: AuthenticationResponse = JSON.parse(responseString);
+          return resolve(authResponse);
+        } catch (error) {
+          return reject(error);
+        }
+      });
+    }
+
+    blackboxInstance = new Blackbox(credentials, authenticator);
+  })
+
+  it('should get all inbox messages', () => {
+    return new Promise((resolve, reject) => {
+      blackboxInstance.getInboxMessages(testGetMessageParams)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        }).catch(error => {
+          reject(error);
+        });
+    });
   }).timeout(10000);
 
-  it('should update inbox message', async (done) => {
-    const response = await blackboxInstance.updateInboxMessage(testGetMessageParams);
-    expect(response).to.not.be.null;
-    done();
+  it('should update inbox message', () => {
+    return new Promise((resolve, reject) => {
+      blackboxInstance.updateInboxMessage(testGetMessageParams)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        }).catch(error => {
+          reject(error);
+        });
+    });
   }).timeout(10000);
 
-  it('should delete inbox message', async (done) => {
-    const response = await blackboxInstance.deleteInboxMessage(testGetMessageParams);
-    expect(response).to.not.be.null;
-    done();
+  it('should delete inbox message', () => {
+    return new Promise((resolve, reject) => {
+      blackboxInstance.deleteInboxMessage(testGetMessageParams)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        }).catch(error => {
+          reject(error);
+        });
+    });
   }).timeout(10000);
 });
 
 describe('Blackbox Payload Test', () => {
-  it('should delete protocol payload by a given id', async (done) => {
-    const deleteResponse = await blackboxInstance.deleteProtocolPayloads(testDeleteProtocolPayloadParams);
-    expect(deleteResponse).to.not.be.null;
-    done();
+  let blackboxInstance: Blackbox;
+
+  beforeEach(async () => {
+    async function authenticator(url: string, credentials: Credentials): Promise<AuthenticationResponse> {
+      const response = await got.post(url, {
+        json: {
+          username: credentials.username,
+          password: credentials.password,
+        }
+      }).json();
+
+      return new Promise((resolve, reject) => {
+        try {
+          const responseString = JSON.stringify(response);
+          let authResponse: AuthenticationResponse = JSON.parse(responseString);
+          return resolve(authResponse);
+        } catch (error) {
+          return reject(error);
+        }
+      });
+    }
+
+    blackboxInstance = new Blackbox(credentials, authenticator);
+  })
+
+  it('should delete protocol payload by a given id', () => {
+    return new Promise((resolve, reject) => {
+      blackboxInstance.deleteProtocolPayloads(testDeleteProtocolPayloadParams)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
   }).timeout(10000);
 
-  it('should get payload by a given ID', async (done) => {
-    const payloadResponse = await blackboxInstance.getPayloadById(getPayloadParams);
-    expect(payloadResponse).to.not.be.null;
-    done();
+  it('should get payload by a given ID', () => {
+    return new Promise((resolve, reject) => {
+      blackboxInstance.getPayloadById(getPayloadParams)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
   }).timeout(10000);
 
-  it('should query protocol payloads by a given query params', async (done) => {
-    const queryResponse = await blackboxInstance.queryProtocolPayloads(getPayloadParams);
-    expect(queryResponse).to.not.be.null;
-    done();
+  it('should query protocol payloads by a given query params', () => {
+    return new Promise((resolve, reject) => {
+      blackboxInstance.queryProtocolPayloads(getPayloadParams)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
   }).timeout(10000);
 });
 
 describe('Blackbox Account/Subscribers Test', () => {
-  it('should get account info', async (done) => {
-    const subscriberParams = {} as SubscriberParameters;
-    const accountInfo = await blackboxInstance.querySubscribers(subscriberParams);
-    expect(accountInfo).to.not.be.null;
-    done();
-  }).timeout(1000);
+  let blackboxInstance: Blackbox;
 
-  it('should delete subscriber', async (done) => {
-    const id = "111111111111111111111111111";
-    const deleteRespose = await blackboxInstance.deleteSubscriber(id);
-    expect(deleteRespose).to.not.be.null;
-    done();
+  beforeEach(async () => {
+    async function authenticator(url: string, credentials: Credentials): Promise<AuthenticationResponse> {
+      const response = await got.post(url, {
+        json: {
+          username: credentials.username,
+          password: credentials.password,
+        }
+      }).json();
+
+      return new Promise((resolve, reject) => {
+        try {
+          const responseString = JSON.stringify(response);
+          let authResponse: AuthenticationResponse = JSON.parse(responseString);
+          return resolve(authResponse);
+        } catch (error) {
+          return reject(error);
+        }
+      });
+    }
+
+    blackboxInstance = new Blackbox(credentials, authenticator);
+  })
+
+  it('should get account info', () => {
+    return new Promise((resolve, reject) => {
+      const subscriberParams = {} as SubscriberParameters;
+
+      blackboxInstance.querySubscribers(subscriberParams)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  }).timeout(10000);
+
+  it('should delete subscriber', () => {
+    return new Promise((resolve, reject) => {
+      const id = "111111";
+
+      blackboxInstance.deleteSubscriber(id)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    })
   }).timeout(10000);
 });
