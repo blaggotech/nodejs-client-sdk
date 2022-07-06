@@ -1,67 +1,173 @@
-import { Authenticate } from "./blaggo";
-import { DeleteInboxMessages, GetInboxMessages } from "./blackbox";
-import 'dotenv/config';
-
 import * as chai from 'chai';
-import { MessageParameters } from "./blackbox/types";
+import { Credentials, MessageParameters, Options, ProtocolPayloadParameters, SubscriberParameters } from "./blackbox/types";
+import { Blackbox } from './blackbox';
+import 'dotenv/config';
 
 const expect = chai.expect;
 
 const testGetMessageParams = {
   id: '111111111111111111111111111',
+  status: "0",
 } as MessageParameters;
 
-describe('Blackbox Test', () => {
-  it('should get all inbox messages', async () => {
-	  const username = process.env["AUTH_USERNAME"] || "";
-  	const password = process.env["AUTH_PASSWORD"] || "";
-  	const auth_url = process.env["AUTH_URL"] || "";
+const testDeleteProtocolPayloadParams = {
+  id: 'aaaa11111111',
+} as ProtocolPayloadParameters;
 
-		expect(username).to.not.be.empty;
-		expect(password).to.not.be.empty;
-		expect(auth_url).to.not.be.empty;
+const testPayloadId = "11111"
 
-    // authenticate
-    const response = await Authenticate(auth_url, username, password);
-    expect(response).to.not.be.null;
-    expect(response.data.tokens.access_token);
+const getPayloadParams = {
+  id: testPayloadId,
+} as ProtocolPayloadParameters;
 
-    const access_token = response.data.tokens.access_token;
+const username = process.env["AUTH_USERNAME"] || "";
+const password = process.env["AUTH_PASSWORD"] || "";
 
-    const messagesResponse = await GetInboxMessages(testGetMessageParams, access_token);
+const credentials = {
+  username: username,
+  password: password,
+} as Credentials;
 
-    expect(messagesResponse).to.not.be.null;
-    expect(messagesResponse.messages).to.not.be.empty;
-    expect(messagesResponse.count).to.be.equal(0);
-  });
+describe('Blackbox Inbox Test', () => {
+  let blackboxInstance: Blackbox;
+  // before each test, create a new instance of Blackbox
+  beforeEach(async () => {
+    const options = {
+      authURL: "https://auth.blaggo.io/auth/",
+      credentials: credentials,
+    } as Options;
 
-  it('should delete inbox message given by a message id', async() => {
-    const username = process.env["AUTH_USERNAME"] || "";
-  	const password = process.env["AUTH_PASSWORD"] || "";
-  	const auth_url = process.env["AUTH_URL"] || "";
-
-		expect(username).to.not.be.empty;
-		expect(password).to.not.be.empty;
-		expect(auth_url).to.not.be.empty;
-
-    // authenticate
-    const response = await Authenticate(auth_url, username, password);
-    expect(response).to.not.be.null;
-    expect(response.data.tokens.access_token);
-
-    const access_token = response.data.tokens.access_token;
-
-    // get inbox message
-    const inboxResponse = await GetInboxMessages(testGetMessageParams, access_token);
-    const inboxId = inboxResponse.messages[0]?.id;
-    expect(inboxId).to.not.be.empty;
-
-    // delete the inbox message
-    const deleteParams = {
-      id: inboxId,
-      status: "1",
-    } as MessageParameters;
-
-    await DeleteInboxMessages(deleteParams, access_token);
+    blackboxInstance = new Blackbox(options);
   })
-})
+
+  it('should get all inbox messages', () => {
+    return new Promise((resolve, reject) => {
+      blackboxInstance.getInboxMessages(testGetMessageParams)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        }).catch(error => {
+          reject(error);
+        });
+    });
+  }).timeout(10000);
+
+  it('should update inbox message', () => {
+    return new Promise((resolve, reject) => {
+      blackboxInstance.updateInboxMessage(testGetMessageParams)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        }).catch(error => {
+          reject(error);
+        });
+    });
+  }).timeout(10000);
+
+  it('should delete inbox message', () => {
+    return new Promise((resolve, reject) => {
+      blackboxInstance.deleteInboxMessage(testGetMessageParams)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        }).catch(error => {
+          reject(error);
+        });
+    });
+  }).timeout(10000);
+});
+
+describe('Blackbox Payload Test', () => {
+  let blackboxInstance: Blackbox;
+
+  beforeEach(async () => {
+    const options = {
+      authURL: "https://auth.blaggo.io/auth/",
+      credentials: credentials,
+    } as Options;
+
+    blackboxInstance = new Blackbox(options);
+  })
+
+  it('should delete protocol payload by a given id', () => {
+    return new Promise((resolve, reject) => {
+      blackboxInstance.deleteProtocolPayloads(testDeleteProtocolPayloadParams)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  }).timeout(10000);
+
+  it('should get payload by a given ID', () => {
+    return new Promise((resolve, reject) => {
+      blackboxInstance.getPayloadById(getPayloadParams)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  }).timeout(10000);
+
+  it('should query protocol payloads by a given query params', () => {
+    return new Promise((resolve, reject) => {
+      blackboxInstance.queryProtocolPayloads(getPayloadParams)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  }).timeout(10000);
+});
+
+describe('Blackbox Account/Subscribers Test', () => {
+  let blackboxInstance: Blackbox;
+
+  beforeEach(async () => {
+    const options = {
+      authURL: "https://auth.blaggo.io/auth/",
+      credentials: credentials,
+    } as Options;
+
+    blackboxInstance = new Blackbox(options);
+  })
+
+  it('should get account info', () => {
+    return new Promise((resolve, reject) => {
+      const subscriberParams = {} as SubscriberParameters;
+
+      blackboxInstance.querySubscribers(subscriberParams)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    });
+  }).timeout(10000);
+
+  it('should delete subscriber', () => {
+    return new Promise((resolve, reject) => {
+      const id = "111111";
+
+      blackboxInstance.deleteSubscriber(id)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        })
+        .catch(error => {
+          reject(error);
+        });
+    })
+  }).timeout(10000);
+});
