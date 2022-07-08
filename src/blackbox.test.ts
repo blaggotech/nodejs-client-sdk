@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import { Credentials, MessageParameters, Options, ProtocolPayloadParameters, SubscriberParameters } from "./blackbox/types";
+import { AddProtocolPayloadParameters, Credentials, MessageParameters, Options, ProtocolPayloadParameters, SubscriberParameters } from "./blackbox/types";
 import { Blackbox } from './blackbox';
 import 'dotenv/config';
 
@@ -13,6 +13,13 @@ const testGetMessageParams = {
 const testDeleteProtocolPayloadParams = {
   id: 'aaaa11111111',
 } as ProtocolPayloadParameters;
+
+const createProtocolParams = {
+  aggregator_id: "11111",
+  alias: "test alias",
+  customer_code: "Hello",
+  profile_id: "11111"
+} as AddProtocolPayloadParameters;
 
 const testPayloadId = "11111"
 
@@ -88,6 +95,18 @@ describe('Blackbox Payload Test', () => {
 
     blackboxInstance = new Blackbox(options);
   })
+
+  it('should create new protocol payload', () => {
+    return new Promise((resolve, reject) => {
+      blackboxInstance.createProtocolPayload(createProtocolParams)
+        .then(response => {
+          expect(response).to.not.be.null;
+          resolve(response);
+        }).catch(error => {
+          reject(error);
+        });
+    })
+  }).timeout(10000);
 
   it('should delete protocol payload by a given id', () => {
     return new Promise((resolve, reject) => {

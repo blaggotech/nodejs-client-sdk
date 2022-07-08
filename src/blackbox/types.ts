@@ -12,6 +12,21 @@ export interface Credentials {
   password: string;
 }
 
+export interface AddProtocolPayloadParameters {
+  profile_id: string
+  aggregator_id: string
+  customer_code: string
+  last_amount: number
+  status: number
+  alias: string
+  sender_id: string
+  receiver_id: string
+  subject: string
+  body: string
+  type: string
+}
+
+
 export interface ProtocolPayloadParameters {
   id: string;
   status: number,

@@ -1,5 +1,6 @@
 import got from 'got';
 import {
+  AddProtocolPayloadParameters,
   Credentials,
   getMessagesURL,
   getPayloadsURL,
@@ -151,7 +152,20 @@ export class Blackbox {
 
   // TODO::
   // https://blackboxtest.blaggo.io/docs#tag/Payload/operation/AddPayload
-  async createProtocolPayload() {}
+  async createProtocolPayload(params: AddProtocolPayloadParameters) {
+    const authenticate = await this.options.authenticatorFn(this.options.authURL, this.options.credentials);
+    const accessToken = authenticate.data.tokens.access_token;
+
+    const baseUrl = `${process.env['BLACKBOX_BASE_URL']}/payloads`;
+    await got.post(baseUrl, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      json: {
+        ...params,
+      }
+    }).json();
+  }
 
   // https://blackboxtest.blaggo.io/docs#tag/Payload/operation/GetPayload
   async getPayloadById(params: ProtocolPayloadParameters): Promise<InboxResponse> {
