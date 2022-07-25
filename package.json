@@ -1,6 +1,6 @@
 {
   "name": "blaggo-blackbox",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A Nodejs SDK that wraps the API Endpoints for Blaggo App.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +12,12 @@
     "build": "tsc",
     "test": "mocha --reporter spec --require ts-node/register 'src/**/*.test.ts'"
   },
-  "keywords": [],
+  "keywords": [
+    "sdk",
+    "fintech",
+    "blaggo",
+    "blackbox"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
