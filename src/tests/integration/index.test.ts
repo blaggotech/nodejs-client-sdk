@@ -1,7 +1,18 @@
 import * as chai from 'chai';
 import got from 'got/dist/source';
-import { Authenticator, Credentials, Options } from './blackbox/types';
-import { AuthenticationResponse } from './blaggo/types';
+import {
+  Authenticator,
+  Credentials,
+  Options,
+} from '../../blackbox/types';
+import {
+  AuthenticationResponse,
+  Environments,
+  Options as AuthOptions,
+} from '../../blaggo/types';
+import {
+  getAuthURL,
+} from '../../blaggo/index';
 import 'dotenv/config';
 
 const expect = chai.expect;
@@ -15,18 +26,18 @@ const credentials = {
 } as Credentials;
 
 const options = {
-  authURL: "https://auth.blaggo.io/auth/",
+  env: Environments.testing,
   credentials: credentials,
 } as Options;
 
 describe('Blaggo Authentication', () => {
   expect(credentials.username).to.not.be.empty;
 	expect(credentials.password).to.not.be.empty;
-	expect(options.authURL).to.not.be.empty;
 
   let authenticator: Authenticator;
   beforeEach(async () => {
-    authenticator = async (url: string, credentials: Credentials): Promise<AuthenticationResponse> => {
+    authenticator = async (credentials: Credentials, options?: AuthOptions): Promise<AuthenticationResponse> => {
+      const url = getAuthURL(options);
       const response = await got.post(url, {
         json: {
           username: credentials.username,
@@ -50,7 +61,7 @@ describe('Blaggo Authentication', () => {
 
   it('should return a response if correct credentials are passed' , () => {
     return new Promise((resolve, reject) => {
-      authenticator(options.authURL, credentials)
+      authenticator(credentials, {env: options.env} as AuthOptions)
         .then(response => {
           expect(response).to.not.be.null;
           resolve(response);
@@ -62,7 +73,7 @@ describe('Blaggo Authentication', () => {
 
   it('should return auth tokens', () => {
     return new Promise((resolve, reject) => {
-      authenticator(options.authURL, credentials)
+      authenticator(credentials, {env: options.env} as AuthOptions)
         .then(response => {
           expect(response).to.not.be.null;
           expect(response.data.tokens.access_token).to.not.be.empty;

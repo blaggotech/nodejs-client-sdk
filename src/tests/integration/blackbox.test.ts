@@ -1,6 +1,14 @@
 import * as chai from 'chai';
-import { AddProtocolPayloadParameters, Credentials, MessageParameters, Options, ProtocolPayloadParameters, SubscriberParameters } from "./blackbox/types";
-import { Blackbox } from './blackbox';
+import {
+  AddProtocolPayloadParameters,
+  Credentials,
+  MessageParameters,
+  Options,
+  ProtocolPayloadParameters,
+  SubscriberParameters,
+} from "../../blackbox/types";
+import { Blackbox } from '../../blackbox';
+import { Environments } from '../../blaggo/types';
 import 'dotenv/config';
 
 const expect = chai.expect;
@@ -40,7 +48,7 @@ describe('Blackbox Inbox Test', () => {
   // before each test, create a new instance of Blackbox
   beforeEach(async () => {
     const options = {
-      authURL: "https://auth.blaggo.io/auth/",
+      env: Environments.testing,
       credentials: credentials,
     } as Options;
 
@@ -89,7 +97,7 @@ describe('Blackbox Payload Test', () => {
 
   beforeEach(async () => {
     const options = {
-      authURL: "https://auth.blaggo.io/auth/",
+      env: Environments.testing,
       credentials: credentials,
     } as Options;
 
@@ -153,7 +161,7 @@ describe('Blackbox Account/Subscribers Test', () => {
 
   beforeEach(async () => {
     const options = {
-      authURL: "https://auth.blaggo.io/auth/",
+      env: Environments.testing,
       credentials: credentials,
     } as Options;
 
