@@ -10,7 +10,8 @@
   "scripts": {
     "prepublish": "pnpm run build",
     "build": "tsc",
-    "integrationtest": "mocha --reporter spec --require ts-node/register 'src/**/tests/integration/*.test.ts'",
+    "blaggotest": "mocha --reporter spec --require ts-node/register 'src/**/tests/integration/index.test.ts'",
+    "integrationtest": "pnpm run blaggotest",
     "test": "mocha --reporter spec --require ts-node/register 'src/**/tests/*.test.ts'"
   },
   "keywords": [
