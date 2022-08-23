@@ -275,7 +275,8 @@ export class Blackbox {
   }
 }
 
-function objectToQueryString(obj: any) {
+// Source: https://stackoverflow.com/a/1714899
+function serialize(obj: any) {
   var str = [];
   for (var p in obj)
     if (obj.hasOwnProperty(p)) {
@@ -287,7 +288,7 @@ function objectToQueryString(obj: any) {
 export function getPayloadsURL(params: ProtocolPayloadParameters, options?: Options): string {
   let url = `${getAPIURL(options)}/payloads`;
 
-  const qs = objectToQueryString(params);
+  const qs = serialize(params);
   if (qs !== "") {
     url = `${url}?${qs}`;
   }
@@ -298,62 +299,10 @@ export function getPayloadsURL(params: ProtocolPayloadParameters, options?: Opti
 export function getMessagesURL(params: MessageParameters, options?: Options): string {
   let url = `${getAPIURL(options)}/inbox`;
 
-  const qs = objectToQueryString(params);
+  const qs = serialize(params);
   if (qs !== "") {
     url = `${url}?${qs}`;
   }
-
-  // if (params.id) {
-  //   url = `${url}id=${params.id}`;
-  // }
-
-  // if (params.sender_id) {
-  //   url = `${url}&sender_id=${params.sender_id}`;
-  // }
-
-  // if (params.sender_name) {
-  //   url = `${url}&sender_name=${params.sender_name}`;
-  // }
-
-  // if (params.receiver_id) {
-  //   url = `${url}&receiver_id=${params.receiver_id}`;
-  // }
-
-  // if (params.receiver_name) {
-  //   url = `${url}&receiver_name=${params.receiver_name}`;
-  // }
-
-  // if (params.status) {
-  //   url = `${url}&status=${params.status}`;
-  // }
-
-  // if (params.type) {
-  //   url = `${url}&type=${params.type}`;
-  // }
-
-  // if (params.types) {
-  //   url = `${url}&types=${params.types}`;
-  // }
-
-  // if (params.transaction_type) {
-  //   url = `${url}&transaction_type=${params.transaction_type}`;
-  // }
-
-  // if (params.transaction_last_state_type) {
-  //   url = `${url}&transaction_last_state_type=${params.transaction_last_state_type}`;
-  // }
-
-  // if (params.includes) {
-  //   url = `${url}&includes=${params.includes}`;
-  // }
-
-  // if (params.page) {
-  //   url = `${url}&page=${params.page}`;
-  // }
-
-  // if (params.per_page) {
-  //   url = `${url}&per_page=${params.per_page}`;
-  // }
 
   return url
 }
@@ -361,7 +310,7 @@ export function getMessagesURL(params: MessageParameters, options?: Options): st
 export function getSubscribersURL(params: SubscriberParameters, options?: Options): string {
   let url = `${getAPIURL(options)}/accounts`;
 
-  const qs = objectToQueryString(params);
+  const qs = serialize(params);
   if (qs !== "") {
     url = `${url}?${qs}`;
   }
