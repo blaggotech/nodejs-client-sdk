@@ -287,4 +287,25 @@ describe('Get Messages URL (getMessagesURL)', () => {
       `${apiUrl}?id=${params.id}&sender_id=${params.sender_id}&status=${params.status}&page=${params.page}&per_page=${params.per_page}`,
     );
   });
+
+  it('should return testing URL with query string with sender & receiver names' , () => {
+    const apiUrl = "https://blackboxtest.blaggo.io/inbox";
+    const params = {
+      sender_name: "Rob Steve",
+      receiver_name: "Renée Noël",
+    } as MessageParameters
+
+    const url = getMessagesURL(
+      params,
+      {env: Environments.testing} as Options,
+    );
+
+    expect(url).to.not.be.empty;
+
+    const senderName = encodeURIComponent(params.sender_name);
+    const receiverName = encodeURIComponent(params.receiver_name);
+    expect(url).to.be.equal(
+      `${apiUrl}?sender_name=${senderName}&receiver_name=${receiverName}`,
+    );
+  });
 });
