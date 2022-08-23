@@ -23,12 +23,16 @@ export class Blackbox {
 
   constructor(options: Options) {
     const authenticator = options.authenticatorFn;
-    const authOptions = {env: options.env} as AuthOptions;
     if (typeof authenticator === 'undefined' || authenticator === undefined || authenticator === null) {
       // default authenticator function
       const authFn = (creds: Credentials): Promise<AuthenticationResponse> => {
-        return Authenticate(creds.username, creds.password, authOptions);
+        return Authenticate(
+          creds.username,
+          creds.password,
+          {env: options.env} as AuthOptions,
+        );
       }
+
       options.authenticatorFn = authFn
     }
 

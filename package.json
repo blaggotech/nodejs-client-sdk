@@ -11,7 +11,8 @@
     "prepublish": "pnpm run build",
     "build": "tsc",
     "blaggotest": "mocha --reporter spec --require ts-node/register 'src/**/tests/integration/index.test.ts'",
-    "integrationtest": "pnpm run blaggotest",
+    "blackboxtest": "mocha --reporter spec --require ts-node/register 'src/**/tests/integration/blackbox.test.ts'",
+    "integrationtest": "mocha --reporter spec --require ts-node/register 'src/**/tests/integration/*.test.ts'",
     "test": "mocha --reporter spec --require ts-node/register 'src/**/tests/*.test.ts'"
   },
   "keywords": [
