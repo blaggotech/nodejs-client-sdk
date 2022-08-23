@@ -315,42 +315,6 @@ export function getSubscribersURL(params: SubscriberParameters, options?: Option
     url = `${url}?${qs}`;
   }
 
-  // if (params === null) {
-  //   return baseUrl
-  // }
-
-  // if (params.id) {
-  //   url = `${url}id=${params.id}`;
-  // }
-
-  // if (params.profile_id) {
-  //   url = `${url}&profile_id=${params.profile_id}`;
-  // }
-
-  // if (params.aggregator_id) {
-  //   url = `${url}&aggregator_id=${params.aggregator_id}`;
-  // }
-
-  // if (params.customer_code) {
-  //   url = `${url}&customer_code=${params.customer_code}`;
-  // }
-
-  // if (params.status) {
-  //   url = `${url}&status=${params.status}`;
-  // }
-
-  // if (params.page) {
-  //   url = `${url}&page=${params.page}`;
-  // }
-
-  // if (params.per_page) {
-  //   url = `${url}&per_page=${params.per_page}`;
-  // }
-
-  // if (params.includes) {
-  //   url = `${url}&includes=${params.includes}`;
-  // }
-
   return url
 }
 

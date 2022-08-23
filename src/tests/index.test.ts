@@ -5,11 +5,13 @@ import {
   getAPIURL,
   getPayloadsURL,
   getMessagesURL,
+  getSubscribersURL,
 } from '../blackbox/index';
 import {
   Options,
   ProtocolPayloadParameters,
   MessageParameters,
+  SubscriberParameters,
 } from '../blackbox/types';
 import 'dotenv/config';
 
@@ -306,6 +308,70 @@ describe('Get Messages URL (getMessagesURL)', () => {
     const receiverName = encodeURIComponent(params.receiver_name);
     expect(url).to.be.equal(
       `${apiUrl}?sender_name=${senderName}&receiver_name=${receiverName}`,
+    );
+  });
+});
+
+describe('Get Subscribers URL (getSubscribersURL)', () => {
+  it('should return testing URL with empty query string' , () => {
+    const url = getSubscribersURL(
+      {} as SubscriberParameters,
+      {env: Environments.testing} as Options,
+    );
+    expect(url).to.not.be.empty;
+    expect(url).to.be.equal("https://blackboxtest.blaggo.io/accounts");
+  });
+
+  it('should return testing URL with id query string' , () => {
+    const url = getSubscribersURL(
+      {id: "123456"} as SubscriberParameters,
+      {env: Environments.testing} as Options,
+    );
+    expect(url).to.not.be.empty;
+    expect(url).to.be.equal(
+      "https://blackboxtest.blaggo.io/accounts?id=123456",
+    );
+  });
+
+  it('should return testing URL with id and profile id query string' , () => {
+    const apiUrl = "https://blackboxtest.blaggo.io/accounts";
+    const params = {
+      id: "12345",
+      profile_id: "123456",
+    } as SubscriberParameters
+
+    const url = getSubscribersURL(
+      params,
+      {env: Environments.testing} as Options,
+    );
+    expect(url).to.not.be.empty;
+    expect(url).to.be.equal(
+      `${apiUrl}?id=${params.id}&profile_id=${params.profile_id}`,
+    );
+  });
+
+  it('should return testing URL with query string' , () => {
+    const apiUrl = "https://blackboxtest.blaggo.io/accounts";
+    const params = {
+      id: "12345",
+      profile_id: "123456",
+      customer_code: "ABCDE",
+      aggregator_id: "12345",
+      status: "1",
+      page: 1,
+      per_page: 20,
+      includes: "count,metadata",
+    } as SubscriberParameters
+
+    const url = getSubscribersURL(
+      params,
+      {env: Environments.testing} as Options,
+    );
+    expect(url).to.not.be.empty;
+
+    const includes = encodeURIComponent(params.includes)
+    expect(url).to.be.equal(
+      `${apiUrl}?id=${params.id}&profile_id=${params.profile_id}&customer_code=${params.customer_code}&aggregator_id=${params.aggregator_id}&status=${params.status}&page=${params.page}&per_page=${params.per_page}&includes=${includes}`,
     );
   });
 });
