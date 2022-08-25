@@ -1,31 +1,17 @@
 import * as chai from 'chai';
-import { AddProtocolPayloadParameters, Credentials, MessageParameters, Options, ProtocolPayloadParameters, SubscriberParameters } from "./blackbox/types";
-import { Blackbox } from './blackbox';
+import {
+  AddProtocolPayloadParameters,
+  Credentials,
+  MessageParameters,
+  Options,
+  ProtocolPayloadParameters,
+  SubscriberParameters,
+} from "../../blackbox/types";
+import { Blackbox } from '../../blackbox';
+import { Environments } from '../../blaggo/types';
 import 'dotenv/config';
 
 const expect = chai.expect;
-
-const testGetMessageParams = {
-  id: '111111111111111111111111111',
-  status: "0",
-} as MessageParameters;
-
-const testDeleteProtocolPayloadParams = {
-  id: 'aaaa11111111',
-} as ProtocolPayloadParameters;
-
-const createProtocolParams = {
-  aggregator_id: "11111",
-  alias: "test alias",
-  customer_code: "Hello",
-  profile_id: "11111"
-} as AddProtocolPayloadParameters;
-
-const testPayloadId = "11111"
-
-const getPayloadParams = {
-  id: testPayloadId,
-} as ProtocolPayloadParameters;
 
 const username = process.env["AUTH_USERNAME"] || "";
 const password = process.env["AUTH_PASSWORD"] || "";
@@ -36,20 +22,24 @@ const credentials = {
 } as Credentials;
 
 describe('Blackbox Inbox Test', () => {
-  let blackboxInstance: Blackbox;
+  let blackbox: Blackbox;
   // before each test, create a new instance of Blackbox
   beforeEach(async () => {
     const options = {
-      authURL: "https://auth.blaggo.io/auth/",
+      env: Environments.testing,
       credentials: credentials,
     } as Options;
 
-    blackboxInstance = new Blackbox(options);
+    blackbox = new Blackbox(options);
   })
 
-  it('should get all inbox messages', () => {
+  it('should get all unread inbox messages', () => {
+    const params = {
+      status: "0",
+    } as MessageParameters;
+
     return new Promise((resolve, reject) => {
-      blackboxInstance.getInboxMessages(testGetMessageParams)
+      blackbox.getInboxMessages(params)
         .then(response => {
           expect(response).to.not.be.null;
           resolve(response);
@@ -60,8 +50,16 @@ describe('Blackbox Inbox Test', () => {
   }).timeout(10000);
 
   it('should update inbox message', () => {
+    const id = process.env["INBOX_MESSAGE_ID"] || "";
+    expect(id, "no inbox message id provided").to.not.be.empty;
+
+    const updates = {
+      id: id,
+      status: "3",
+    } as MessageParameters;
+
     return new Promise((resolve, reject) => {
-      blackboxInstance.updateInboxMessage(testGetMessageParams)
+      blackbox.updateInboxMessage(updates)
         .then(response => {
           expect(response).to.not.be.null;
           resolve(response);
@@ -72,8 +70,15 @@ describe('Blackbox Inbox Test', () => {
   }).timeout(10000);
 
   it('should delete inbox message', () => {
+    const id = process.env["INBOX_MESSAGE_ID"] || "";
+    expect(id, "no inbox message id provided").to.not.be.empty;
+
+    const params = {
+      id: id,
+    } as MessageParameters;
+
     return new Promise((resolve, reject) => {
-      blackboxInstance.deleteInboxMessage(testGetMessageParams)
+      blackbox.deleteInboxMessage(params)
         .then(response => {
           expect(response).to.not.be.null;
           resolve(response);
@@ -85,20 +90,27 @@ describe('Blackbox Inbox Test', () => {
 });
 
 describe('Blackbox Payload Test', () => {
-  let blackboxInstance: Blackbox;
+  let blackbox: Blackbox;
 
   beforeEach(async () => {
     const options = {
-      authURL: "https://auth.blaggo.io/auth/",
+      env: Environments.testing,
       credentials: credentials,
     } as Options;
 
-    blackboxInstance = new Blackbox(options);
+    blackbox = new Blackbox(options);
   })
 
   it('should create new protocol payload', () => {
+    const payload = {
+      aggregator_id: "11111",
+      alias: "test alias",
+      customer_code: "Hello",
+      profile_id: "11111"
+    } as AddProtocolPayloadParameters;
+
     return new Promise((resolve, reject) => {
-      blackboxInstance.createProtocolPayload(createProtocolParams)
+      blackbox.createProtocolPayload(payload)
         .then(response => {
           expect(response).to.not.be.null;
           resolve(response);
@@ -109,8 +121,15 @@ describe('Blackbox Payload Test', () => {
   }).timeout(10000);
 
   it('should delete protocol payload by a given id', () => {
+    const id = process.env["PAYLOAD_ID"] || "";
+    expect(id, "no payload id provided").to.not.be.empty;
+
+    const params = {
+      id: id,
+    } as ProtocolPayloadParameters;
+
     return new Promise((resolve, reject) => {
-      blackboxInstance.deleteProtocolPayloads(testDeleteProtocolPayloadParams)
+      blackbox.deleteProtocolPayloads(params)
         .then(response => {
           expect(response).to.not.be.null;
           resolve(response);
@@ -122,8 +141,15 @@ describe('Blackbox Payload Test', () => {
   }).timeout(10000);
 
   it('should get payload by a given ID', () => {
+    const id = process.env["PAYLOAD_ID"] || "";
+    expect(id, "no payload id provided").to.not.be.empty;
+
+    const params = {
+      id: id,
+    } as ProtocolPayloadParameters;
+
     return new Promise((resolve, reject) => {
-      blackboxInstance.getPayloadById(getPayloadParams)
+      blackbox.getPayloadById(params)
         .then(response => {
           expect(response).to.not.be.null;
           resolve(response);
@@ -135,8 +161,15 @@ describe('Blackbox Payload Test', () => {
   }).timeout(10000);
 
   it('should query protocol payloads by a given query params', () => {
+    const id = process.env["PAYLOAD_ID"] || "";
+    expect(id, "no payload id provided").to.not.be.empty;
+
+    const params = {
+      id: id,
+    } as ProtocolPayloadParameters;
+
     return new Promise((resolve, reject) => {
-      blackboxInstance.queryProtocolPayloads(getPayloadParams)
+      blackbox.queryProtocolPayloads(params)
         .then(response => {
           expect(response).to.not.be.null;
           resolve(response);
@@ -149,22 +182,24 @@ describe('Blackbox Payload Test', () => {
 });
 
 describe('Blackbox Account/Subscribers Test', () => {
-  let blackboxInstance: Blackbox;
+  let blackbox: Blackbox;
 
   beforeEach(async () => {
     const options = {
-      authURL: "https://auth.blaggo.io/auth/",
+      env: Environments.testing,
       credentials: credentials,
     } as Options;
 
-    blackboxInstance = new Blackbox(options);
+    blackbox = new Blackbox(options);
   })
 
   it('should get account info', () => {
     return new Promise((resolve, reject) => {
-      const subscriberParams = {} as SubscriberParameters;
+      const subscriberParams = {
+        status: "pending",
+      } as SubscriberParameters;
 
-      blackboxInstance.querySubscribers(subscriberParams)
+      blackbox.querySubscribers(subscriberParams)
         .then(response => {
           expect(response).to.not.be.null;
           resolve(response);
@@ -177,9 +212,10 @@ describe('Blackbox Account/Subscribers Test', () => {
 
   it('should delete subscriber', () => {
     return new Promise((resolve, reject) => {
-      const id = "111111";
+      const id = process.env["SUBSCRIPTION_ID"] || "";
+      expect(id, "no subscription id provided").to.not.be.empty;
 
-      blackboxInstance.deleteSubscriber(id)
+      blackbox.deleteSubscriber(id)
         .then(response => {
           expect(response).to.not.be.null;
           resolve(response);

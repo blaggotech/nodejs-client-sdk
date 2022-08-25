@@ -1,6 +1,6 @@
 {
   "name": "blaggo-blackbox",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A Nodejs SDK that wraps the API Endpoints for Blaggo App.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -10,7 +10,10 @@
   "scripts": {
     "prepublish": "pnpm run build",
     "build": "tsc",
-    "test": "mocha --reporter spec --require ts-node/register 'src/**/*.test.ts'"
+    "blaggotest": "mocha --reporter spec --require ts-node/register 'src/**/tests/integration/index.test.ts'",
+    "blackboxtest": "mocha --reporter spec --require ts-node/register 'src/**/tests/integration/blackbox.test.ts'",
+    "integrationtest": "mocha --reporter spec --require ts-node/register 'src/**/tests/integration/*.test.ts'",
+    "test": "mocha --reporter spec --require ts-node/register 'src/**/tests/*.test.ts'"
   },
   "keywords": [
     "sdk",
