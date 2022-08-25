@@ -52,7 +52,7 @@ export class Blackbox {
     );
     const accessToken = authenticate.data.tokens.access_token;
 
-    const deleteMessageUrl = getMessagesURL(params)
+    const deleteMessageUrl = getMessagesURL(params, this.options);
     const deleteMessageResponse = await got.delete(deleteMessageUrl, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -72,13 +72,14 @@ export class Blackbox {
 
   // https://blackboxtest.blaggo.io/docs#tag/Inbox/operation/GetMessages
   async getInboxMessages(params: MessageParameters): Promise<InboxResponse> {
-    const authenticate = await this.options.authenticatorFn(
+    const auth = await this.options.authenticatorFn(
       this.options.credentials,
       {env: this.options.env} as AuthOptions,
     );
-    const accessToken = authenticate.data.tokens.access_token;
 
-    const getMessagesUrl = getMessagesURL(params);
+    const accessToken = auth.data.tokens.access_token;
+
+    const getMessagesUrl = getMessagesURL(params, this.options);
     const getMessageResponse = await got.get(getMessagesUrl, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -139,7 +140,7 @@ export class Blackbox {
     );
     const accessToken = authenticate.data.tokens.access_token;
 
-    const deletePayloadUrl = getPayloadsURL(params);
+    const deletePayloadUrl = getPayloadsURL(params, this.options);
     await got.delete(deletePayloadUrl, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -155,7 +156,7 @@ export class Blackbox {
     );
     const accessToken = authenticate.data.tokens.access_token;
 
-    const queryProtocolPayloadsURL = getPayloadsURL(params);
+    const queryProtocolPayloadsURL = getPayloadsURL(params, this.options);
     const queryProtocolPayloadsResponse = await got.get(queryProtocolPayloadsURL, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -233,7 +234,7 @@ export class Blackbox {
     );
     const accessToken = authenticate.data.tokens.access_token;
 
-    const querySubscribersURL = getSubscribersURL(params);
+    const querySubscribersURL = getSubscribersURL(params, this.options);
     const querySubscribersResponse = await got.get(querySubscribersURL, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
