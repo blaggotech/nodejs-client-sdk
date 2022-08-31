@@ -33,4 +33,11 @@ export const AuthURLs = {
   prod: "https://auth.blaggo.io/auth/",
 }
 
+export const OAuth2URLs = {
+  test: "https://authtest.blaggo.io/oauth2/",
+  stage: "https://authstage.blaggo.io/oauth2/",
+  prod: "https://auth.blaggo.io/oauth2/",
+}
+
 export type AuthURLKey = keyof typeof AuthURLs;
+export type OAuth2URLKey = keyof typeof OAuth2URLs;
