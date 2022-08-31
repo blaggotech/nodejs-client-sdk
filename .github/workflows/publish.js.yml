@@ -15,7 +15,7 @@ jobs:
       - run: npm install -g pnpm
       - run: npm install typescript --save-dev
       - run: npm run build
-      - run: pnpm test
+      - run: npm test
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
