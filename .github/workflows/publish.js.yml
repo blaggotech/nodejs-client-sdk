@@ -12,8 +12,10 @@ jobs:
         with:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
+      - run: npm install -g pnpm
       - run: npm install typescript --save-dev
-      - run: npm build
+      - run: npm run build
+      - run: pnpm test
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
