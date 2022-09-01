@@ -34,9 +34,7 @@
    console.log(res.data)
    ```
 
-### Inbox Messages
-
-   - Getting Inbox Messages
+### Blackbox Initialization
 
    ```javascript
    const blaggo = require("blaggo-blackbox")
@@ -48,9 +46,27 @@
    };
 
    const blackbox = new blaggo.Blackbox(options)
+   ```
+
+### Inbox Messages
+
+   - Getting Inbox Messages
+
+   ```javascript
 
    // Other values for `status` can be found in the API docs.
    const unreads = await blackbox.getInboxMessages({status: "0"})
-
    console.log(unreads)
+   ```
+
+   - Updating an Inbox Message
+
+   ```javascript
+   // Other values for `status` can be found in the API docs.
+   const res = await blackbox.updateInboxMessage({
+    id: "abb55913-b773-449d-9cb2-9777ded7d062",
+    status: "3",
+   });
+
+   console.log(res);
    ```
