@@ -6,14 +6,14 @@
 
 ### Authentication
 
-    ```js
-    var blackbox = require("blaggo-blackbox")
+   ```javascript
+   var blackbox = require("blaggo-blackbox")
 
-    // env can either be `test`, `stage`, or `prod`.
-    const options = {env: "test"};
+   // env can either be `test`, `stage`, or `prod`.
+   const options = {env: "test"};
 
-    // When `options` is not provided the `env` is considered `prod`
-    var res = await blackbox.Authenticate("username", "password", options)
+   // When `options` is not provided the `env` is considered `prod`
+   var res = await blackbox.Authenticate("username", "password", options)
 
-    console.log(res.data)
-    ```
+   console.log(res.data)
+   ```
