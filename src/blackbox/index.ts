@@ -1,11 +1,11 @@
 import got from 'got';
 import {
-  AddProtocolPayloadParameters,
+  AddPayloadParameters,
   Credentials,
   InboxResponse,
   MessageParameters,
   Options,
-  ProtocolPayloadParameters,
+  PayloadParameters,
   SubscriberParameters,
   SubscriberResponse,
   APIURLs,
@@ -133,7 +133,7 @@ export class Blackbox {
    */
 
   // https://blackboxtest.blaggo.io/docs#tag/Payload/operation/DeletePayloads
-  async deleteProtocolPayloads(params: ProtocolPayloadParameters) {
+  async deletePayloads(params: PayloadParameters) {
     const authenticate = await this.options.authenticatorFn(
       this.options.credentials,
       {env: this.options.env} as AuthOptions,
@@ -149,15 +149,15 @@ export class Blackbox {
   }
 
   // https://blackboxtest.blaggo.io/docs#tag/Payload/operation/QueryPayloads
-  async queryProtocolPayloads(params: ProtocolPayloadParameters): Promise<InboxResponse> {
+  async queryPayloads(params: PayloadParameters): Promise<InboxResponse> {
     const authenticate = await this.options.authenticatorFn(
       this.options.credentials,
       {env: this.options.env} as AuthOptions,
     );
     const accessToken = authenticate.data.tokens.access_token;
 
-    const queryProtocolPayloadsURL = getPayloadsURL(params, this.options);
-    const queryProtocolPayloadsResponse = await got.get(queryProtocolPayloadsURL, {
+    const queryPayloadsURL = getPayloadsURL(params, this.options);
+    const queryPayloadsResponse = await got.get(queryPayloadsURL, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       }
@@ -165,7 +165,7 @@ export class Blackbox {
 
     return new Promise((resolve, reject) => {
       try {
-        const responseString = JSON.stringify(queryProtocolPayloadsResponse);
+        const responseString = JSON.stringify(queryPayloadsResponse);
         let authResponse: InboxResponse = JSON.parse(responseString);
         return resolve(authResponse);
       } catch (error) {
@@ -176,7 +176,7 @@ export class Blackbox {
 
   // TODO::
   // https://blackboxtest.blaggo.io/docs#tag/Payload/operation/AddPayload
-  async createProtocolPayload(params: AddProtocolPayloadParameters) {
+  async createPayload(params: AddPayloadParameters) {
     const authenticate = await this.options.authenticatorFn(
       this.options.credentials,
       {env: this.options.env} as AuthOptions,
@@ -195,7 +195,7 @@ export class Blackbox {
   }
 
   // https://blackboxtest.blaggo.io/docs#tag/Payload/operation/GetPayload
-  async getPayloadById(params: ProtocolPayloadParameters): Promise<InboxResponse> {
+  async getPayloadById(params: PayloadParameters): Promise<InboxResponse> {
     const authenticate = await this.options.authenticatorFn(
       this.options.credentials,
       {env: this.options.env} as AuthOptions,
@@ -290,7 +290,7 @@ function serialize(obj: any) {
   return str.join("&");
 }
 
-export function getPayloadsURL(params: ProtocolPayloadParameters, options?: Options): string {
+export function getPayloadsURL(params: PayloadParameters, options?: Options): string {
   let url = `${getAPIURL(options)}/payloads`;
 
   const qs = serialize(params);

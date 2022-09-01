@@ -9,7 +9,7 @@ import {
 } from '../blackbox/index';
 import {
   Options,
-  ProtocolPayloadParameters,
+  PayloadParameters,
   MessageParameters,
   SubscriberParameters,
 } from '../blackbox/types';
@@ -72,7 +72,7 @@ describe('Get Blackbox API URL (getAPIURL)', () => {
 describe('Get Payloads URL (getPayloadsURL)', () => {
   it('should return testing URL with empty query string' , () => {
     const url = getPayloadsURL(
-      {} as ProtocolPayloadParameters,
+      {} as PayloadParameters,
       {env: Environments.testing} as Options,
     );
     expect(url).to.not.be.empty;
@@ -81,7 +81,7 @@ describe('Get Payloads URL (getPayloadsURL)', () => {
 
   it('should return testing URL with profile id query string' , () => {
     const url = getPayloadsURL(
-      {profile_id: "123456"} as ProtocolPayloadParameters,
+      {profile_id: "123456"} as PayloadParameters,
       {env: Environments.testing} as Options,
     );
     expect(url).to.not.be.empty;
@@ -95,7 +95,7 @@ describe('Get Payloads URL (getPayloadsURL)', () => {
     const params = {
       id: "12345",
       profile_id: "123456",
-    } as ProtocolPayloadParameters
+    } as PayloadParameters
 
     const url = getPayloadsURL(
       params,
@@ -115,7 +115,7 @@ describe('Get Payloads URL (getPayloadsURL)', () => {
       status: 1,
       page: 1,
       per_page: 20,
-    } as ProtocolPayloadParameters
+    } as PayloadParameters
 
     const url = getPayloadsURL(
       params,
@@ -129,7 +129,7 @@ describe('Get Payloads URL (getPayloadsURL)', () => {
 
   it('should return staging URL with empty query string' , () => {
     const url = getPayloadsURL(
-      {} as ProtocolPayloadParameters,
+      {} as PayloadParameters,
       {env: Environments.staging} as Options,
     );
     expect(url).to.not.be.empty;
@@ -138,7 +138,7 @@ describe('Get Payloads URL (getPayloadsURL)', () => {
 
   it('should return staging URL with profile id query string' , () => {
     const url = getPayloadsURL(
-      {profile_id: "123456"} as ProtocolPayloadParameters,
+      {profile_id: "123456"} as PayloadParameters,
       {env: Environments.staging} as Options,
     );
     expect(url).to.not.be.empty;
@@ -152,7 +152,7 @@ describe('Get Payloads URL (getPayloadsURL)', () => {
     const params = {
       id: "12345",
       profile_id: "123456",
-    } as ProtocolPayloadParameters
+    } as PayloadParameters
 
     const url = getPayloadsURL(
       params,
@@ -172,7 +172,7 @@ describe('Get Payloads URL (getPayloadsURL)', () => {
       status: 1,
       page: 1,
       per_page: 20,
-    } as ProtocolPayloadParameters
+    } as PayloadParameters
 
     const url = getPayloadsURL(
       params,
@@ -185,14 +185,14 @@ describe('Get Payloads URL (getPayloadsURL)', () => {
   });
 
   it('should return production URL with empty query string' , () => {
-    const url = getPayloadsURL({} as ProtocolPayloadParameters);
+    const url = getPayloadsURL({} as PayloadParameters);
     expect(url).to.not.be.empty;
     expect(url).to.be.equal("https://blackbox.blaggo.io/payloads");
   });
 
   it('should return production URL with profile id query string' , () => {
     const url = getPayloadsURL(
-      {profile_id: "123456"} as ProtocolPayloadParameters,
+      {profile_id: "123456"} as PayloadParameters,
     );
     expect(url).to.not.be.empty;
     expect(url).to.be.equal(
@@ -205,7 +205,7 @@ describe('Get Payloads URL (getPayloadsURL)', () => {
     const params = {
       id: "12345",
       profile_id: "123456",
-    } as ProtocolPayloadParameters
+    } as PayloadParameters
 
     const url = getPayloadsURL(params);
     expect(url).to.not.be.empty;
@@ -222,7 +222,7 @@ describe('Get Payloads URL (getPayloadsURL)', () => {
       status: 1,
       page: 1,
       per_page: 20,
-    } as ProtocolPayloadParameters
+    } as PayloadParameters
 
     const url = getPayloadsURL(params);
     expect(url).to.not.be.empty;

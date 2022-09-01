@@ -87,7 +87,7 @@
    - Updating Subscription
 
    ```javascript
-   const res = await blackbox.createProtocolPayload({
+   const res = await blackbox.createPayload({
     aggregator_id: "blaggo biller id",
     customer_code: "QV2341TG",
     profile_id: "blaggo user id",

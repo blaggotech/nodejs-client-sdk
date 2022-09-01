@@ -21,7 +21,7 @@ export interface Credentials {
   password: string;
 }
 
-export interface AddProtocolPayloadParameters {
+export interface AddPayloadParameters {
   profile_id: string
   aggregator_id: string
   customer_code: string
@@ -36,7 +36,7 @@ export interface AddProtocolPayloadParameters {
 }
 
 
-export interface ProtocolPayloadParameters {
+export interface PayloadParameters {
   id: string;
   status: number,
   profile_id: string,

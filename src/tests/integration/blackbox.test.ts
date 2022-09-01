@@ -1,10 +1,10 @@
 import * as chai from 'chai';
 import {
-  AddProtocolPayloadParameters,
+  AddPayloadParameters,
   Credentials,
   MessageParameters,
   Options,
-  ProtocolPayloadParameters,
+  PayloadParameters,
   SubscriberParameters,
 } from "../../blackbox/types";
 import { Blackbox } from '../../blackbox';
@@ -107,10 +107,10 @@ describe('Blackbox Payload Test', () => {
       alias: "test alias",
       customer_code: "Hello",
       profile_id: "11111"
-    } as AddProtocolPayloadParameters;
+    } as AddPayloadParameters;
 
     return new Promise((resolve, reject) => {
-      blackbox.createProtocolPayload(payload)
+      blackbox.createPayload(payload)
         .then(response => {
           expect(response).to.not.be.null;
           resolve(response);
@@ -126,10 +126,10 @@ describe('Blackbox Payload Test', () => {
 
     const params = {
       id: id,
-    } as ProtocolPayloadParameters;
+    } as PayloadParameters;
 
     return new Promise((resolve, reject) => {
-      blackbox.deleteProtocolPayloads(params)
+      blackbox.deletePayloads(params)
         .then(response => {
           expect(response).to.not.be.null;
           resolve(response);
@@ -146,7 +146,7 @@ describe('Blackbox Payload Test', () => {
 
     const params = {
       id: id,
-    } as ProtocolPayloadParameters;
+    } as PayloadParameters;
 
     return new Promise((resolve, reject) => {
       blackbox.getPayloadById(params)
@@ -166,10 +166,10 @@ describe('Blackbox Payload Test', () => {
 
     const params = {
       id: id,
-    } as ProtocolPayloadParameters;
+    } as PayloadParameters;
 
     return new Promise((resolve, reject) => {
-      blackbox.queryProtocolPayloads(params)
+      blackbox.queryPayloads(params)
         .then(response => {
           expect(response).to.not.be.null;
           resolve(response);
