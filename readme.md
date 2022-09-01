@@ -2,7 +2,23 @@
 
 [![Node.js CI](https://github.com/blaggotech/nodejs-client-sdk/actions/workflows/node.js.yml/badge.svg)](https://github.com/blaggotech/nodejs-client-sdk/actions/workflows/node.js.yml)
 
+## API Documentation
+
+   - Staging Environment
+
+   https://blackboxstage.blaggo.io/blackbox/docs
+
+   - Production Environment
+
+   https://blackbox.blaggo.io/blackbox/docs
+
 ## Getting Started
+
+### Installation
+
+   ```bash
+   npm i blaggo-blackbox
+   ```
 
 ### Authentication
 
