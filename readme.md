@@ -4,11 +4,11 @@
 
 ## API Documentation
 
-   - Staging Environment
+- Staging Environment
 
    https://blackboxstage.blaggo.io/blackbox/docs
 
-   - Production Environment
+- Production Environment
 
    https://blackbox.blaggo.io/blackbox/docs
 
