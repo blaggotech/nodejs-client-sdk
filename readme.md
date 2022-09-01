@@ -71,6 +71,21 @@
    console.log(res);
    ```
 
+   - Sending Inbox Message
+
+   ```javascript
+   // Although `sender_id` is required, the logged in user will automatically
+   // as the sender of the message.
+   const res = await blackbox.createPayload({
+    sender_id: "blaggo user id",
+    receiver_id: "blaggo user id",
+    subject: "Test",
+    body: "Test message",
+   });
+
+   console.log(res);
+   ```
+
 ### Subscription
 
    - Getting Pending Subscriptions
