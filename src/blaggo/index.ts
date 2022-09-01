@@ -3,6 +3,8 @@ import {
   AuthenticationResponse,
   AuthURLs,
   AuthURLKey,
+  OAuth2URLs,
+  OAuth2URLKey,
   Options,
 } from './types';
 
@@ -17,6 +19,19 @@ export function getAuthURL(options?: Options): string {
 
   const authKey = options.env as AuthURLKey;
   return AuthURLs[authKey];
+}
+
+export function getOAuth2URL(options?: Options): string {
+  if (typeof options === 'undefined' || options === undefined || options === null) {
+    return OAuth2URLs.prod
+  }
+
+  if (options.env === "") {
+    return OAuth2URLs.prod;
+  }
+
+  const authKey = options.env as OAuth2URLKey;
+  return OAuth2URLs[authKey];
 }
 
 export async function Authenticate(username: string, password: string, options?: Options): Promise<AuthenticationResponse> {
