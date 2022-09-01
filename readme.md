@@ -36,7 +36,7 @@
 
 ### Inbox Messages
 
-   1. Getting Inbox Messages
+   - Getting Inbox Messages
 
    ```javascript
    const blaggo = require("blaggo-blackbox")
