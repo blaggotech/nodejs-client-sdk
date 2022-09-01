@@ -1,8 +1,8 @@
 {
   "name": "blaggo-blackbox",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "A Nodejs SDK that wraps the API Endpoints for Blaggo Blackbox.",
-  "repository": "blaggotech/nodeje-client-sdk",
+  "repository": "blaggotech/nodejs-client-sdk",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [

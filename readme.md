@@ -30,7 +30,7 @@
 
    // When `options` is not provided the `env` is considered `prod`
    const res = await blaggo.Authenticate({
-    client_id: "client-id",
+    client_id: "API client id",
     client_secret: "API client secret",
     grant_type: "client_credentials",
    }, options);
