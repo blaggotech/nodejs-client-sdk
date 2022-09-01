@@ -7,13 +7,34 @@
 ### Authentication
 
    ```javascript
-   var blackbox = require("blaggo-blackbox")
+   const blaggo = require("blaggo-blackbox")
 
    // env can either be `test`, `stage`, or `prod`.
    const options = {env: "test"};
 
    // When `options` is not provided the `env` is considered `prod`
-   var res = await blackbox.Authenticate("username", "password", options)
+   const res = await blaggo.Authenticate("username", "password", options)
 
    console.log(res.data)
+   ```
+
+### Inbox Messages
+
+   1. Getting Inbox Messages
+
+   ```javascript
+   const blaggo = require("blaggo-blackbox")
+
+   // env can either be `test`, `stage`, or `prod`.
+   const options = {
+    env: "test",
+    credentials: {username: "username", password:"password"}
+   };
+
+   const blackbox = new blaggo.Blackbox(options)
+
+   // Other values for `status` can be found in the API docs.
+   const unreads = await blackbox.getInboxMessages({status: "0"})
+
+   console.log(unreads)
    ```
