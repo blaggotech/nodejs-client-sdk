@@ -23,21 +23,21 @@
 ### Authentication
 
    ```javascript
-   const blaggo = require("blaggo-blackbox")
+   const blaggo = require("blaggo-blackbox");
 
    // env can either be `test`, `stage`, or `prod`.
    const options = {env: "test"};
 
    // When `options` is not provided the `env` is considered `prod`
-   const res = await blaggo.Authenticate("username", "password", options)
+   const res = await blaggo.Authenticate("username", "password", options);
 
-   console.log(res.data)
+   console.log(res.data);
    ```
 
 ### Blackbox Initialization
 
    ```javascript
-   const blaggo = require("blaggo-blackbox")
+   const blaggo = require("blaggo-blackbox");
 
    // env can either be `test`, `stage`, or `prod`.
    const options = {
@@ -45,7 +45,7 @@
     credentials: {username: "username", password:"password"}
    };
 
-   const blackbox = new blaggo.Blackbox(options)
+   const blackbox = new blaggo.Blackbox(options);
    ```
 
 ### Inbox Messages
@@ -55,8 +55,8 @@
    ```javascript
 
    // Other values for `status` can be found in the API docs.
-   const unreads = await blackbox.getInboxMessages({status: "0"})
-   console.log(unreads)
+   const unreads = await blackbox.getInboxMessages({status: "0"});
+   console.log(unreads);
    ```
 
    - Updating an Inbox Message
@@ -66,6 +66,32 @@
    const res = await blackbox.updateInboxMessage({
     id: "abb55913-b773-449d-9cb2-9777ded7d062",
     status: "3",
+   });
+
+   console.log(res);
+   ```
+
+### Subscription
+
+   - Getting Pending Subscriptions
+
+   ```javascript
+   // Other values for `status` can be found in the API docs.
+   const res = await blackbox.querySubscribers({
+    status: "pending",
+   });
+
+   console.log(res);
+   ```
+
+   - Updating Subscription
+
+   ```javascript
+   const res = await blackbox.createProtocolPayload({
+    aggregator_id: "blaggo biller id",
+    customer_code: "QV2341TG",
+    profile_id: "blaggo user id",
+    status: "approved",
    });
 
    console.log(res);
