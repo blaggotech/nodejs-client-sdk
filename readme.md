@@ -29,7 +29,11 @@
    const options = {env: "test"};
 
    // When `options` is not provided the `env` is considered `prod`
-   const res = await blaggo.Authenticate("username", "password", options);
+   const res = await blaggo.Authenticate({
+    client_id: "client-id",
+    client_secret: "API client secret",
+    grant_type: "client_credentials",
+   }, options);
 
    console.log(res.data);
    ```
@@ -42,7 +46,11 @@
    // env can either be `test`, `stage`, or `prod`.
    const options = {
     env: "test",
-    credentials: {username: "username", password:"password"}
+    credentials: {
+     client_id: "API client id",
+     client_secret: "API client secret",
+     grant_type: "client_credentials",
+    }
    };
 
    const blackbox = new blaggo.Blackbox(options);
@@ -64,7 +72,7 @@
    ```javascript
    // Other values for `status` can be found in the API docs.
    const res = await blackbox.updateInboxMessage({
-    id: "abb55913-b773-449d-9cb2-9777ded7d062",
+    id: "message id",
     status: "3",
    });
 

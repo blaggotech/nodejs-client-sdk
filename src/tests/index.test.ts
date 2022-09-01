@@ -1,9 +1,6 @@
 import * as chai from 'chai';
 import { Environments } from '../blaggo/types';
-import {
-  getAuthURL,
-  getOAuth2URL,
-} from '../blaggo/index';
+import { getAuthURL } from '../blaggo/index';
 import {
   getAPIURL,
   getPayloadsURL,
@@ -19,32 +16,6 @@ import {
 import 'dotenv/config';
 
 const expect = chai.expect;
-
-describe('Get Authentication URL (getAuthURL)', () => {
-  it('should return prod environment URL by default' , () => {
-    const url = getAuthURL();
-    expect(url).to.not.be.empty;
-    expect(url).to.be.equal("https://auth.blaggo.io/auth/");
-  });
-
-  it('should return test environment URL' , () => {
-    const url = getAuthURL({env: Environments.testing});
-    expect(url).to.not.be.empty;
-    expect(url).to.be.equal("https://authtest.blaggo.io/auth/");
-  });
-
-  it('should return stage environment URL' , () => {
-    const url = getAuthURL({env: Environments.staging});
-    expect(url).to.not.be.empty;
-    expect(url).to.be.equal("https://authstage.blaggo.io/auth/");
-  });
-
-  it('should return prod environment URL' , () => {
-    const url = getAuthURL({env: Environments.production});
-    expect(url).to.not.be.empty;
-    expect(url).to.be.equal("https://auth.blaggo.io/auth/");
-  });
-});
 
 describe('Get Blackbox API URL (getAPIURL)', () => {
   it('should return prod environment URL by default' , () => {
@@ -379,28 +350,28 @@ describe('Get Subscribers URL (getSubscribersURL)', () => {
   });
 });
 
-describe('Get OAuth2 URL (getOAuth2URL)', () => {
+describe('Get OAuth2 URL (getAuthURL)', () => {
   it('should return prod environment URL by default' , () => {
-    const url = getOAuth2URL();
+    const url = getAuthURL();
     expect(url).to.not.be.empty;
-    expect(url).to.be.equal("https://auth.blaggo.io/oauth2/");
+    expect(url).to.be.equal("https://auth.blaggo.io/oauth2/token/");
   });
 
   it('should return test environment URL' , () => {
-    const url = getOAuth2URL({env: Environments.testing});
+    const url = getAuthURL({env: Environments.testing});
     expect(url).to.not.be.empty;
-    expect(url).to.be.equal("https://authtest.blaggo.io/oauth2/");
+    expect(url).to.be.equal("https://authtest.blaggo.io/oauth2/token/");
   });
 
   it('should return stage environment URL' , () => {
-    const url = getOAuth2URL({env: Environments.staging});
+    const url = getAuthURL({env: Environments.staging});
     expect(url).to.not.be.empty;
-    expect(url).to.be.equal("https://authstage.blaggo.io/oauth2/");
+    expect(url).to.be.equal("https://authstage.blaggo.io/oauth2/token/");
   });
 
   it('should return prod environment URL' , () => {
-    const url = getOAuth2URL({env: Environments.production});
+    const url = getAuthURL({env: Environments.production});
     expect(url).to.not.be.empty;
-    expect(url).to.be.equal("https://auth.blaggo.io/oauth2/");
+    expect(url).to.be.equal("https://auth.blaggo.io/oauth2/token/");
   });
 });

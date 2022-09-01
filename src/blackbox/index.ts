@@ -1,7 +1,6 @@
 import got from 'got';
 import {
   AddPayloadParameters,
-  Credentials,
   InboxResponse,
   MessageParameters,
   Options,
@@ -12,6 +11,7 @@ import {
   APIURLKey,
 } from "./types";
 import {
+  Credentials,
   AuthenticationResponse,
   Options as AuthOptions,
 } from '../blaggo/types';
@@ -27,8 +27,7 @@ export class Blackbox {
       // default authenticator function
       const authFn = (creds: Credentials): Promise<AuthenticationResponse> => {
         return Authenticate(
-          creds.username,
-          creds.password,
+          creds,
           {env: options.env} as AuthOptions,
         );
       }
@@ -50,7 +49,7 @@ export class Blackbox {
       this.options.credentials,
       {env: this.options.env} as AuthOptions,
     );
-    const accessToken = authenticate.data.tokens.access_token;
+    const accessToken = authenticate.access_token;
 
     const deleteMessageUrl = getMessagesURL(params, this.options);
     const deleteMessageResponse = await got.delete(deleteMessageUrl, {
@@ -77,7 +76,8 @@ export class Blackbox {
       {env: this.options.env} as AuthOptions,
     );
 
-    const accessToken = auth.data.tokens.access_token;
+    const accessToken = auth.access_token;
+    console.log(">>> [DEBUG] access token:", accessToken);
 
     const getMessagesUrl = getMessagesURL(params, this.options);
     const getMessageResponse = await got.get(getMessagesUrl, {
@@ -103,7 +103,7 @@ export class Blackbox {
       this.options.credentials,
       {env: this.options.env} as AuthOptions,
     );
-    const accessToken = authenticate.data.tokens.access_token;
+    const accessToken = authenticate.access_token;
 
     const baseUrl = `${getAPIURL(this.options)}/inbox`;
     const updateMessageUrl = `${baseUrl}/${params.id}`;
@@ -138,7 +138,7 @@ export class Blackbox {
       this.options.credentials,
       {env: this.options.env} as AuthOptions,
     );
-    const accessToken = authenticate.data.tokens.access_token;
+    const accessToken = authenticate.access_token;
 
     const deletePayloadUrl = getPayloadsURL(params, this.options);
     await got.delete(deletePayloadUrl, {
@@ -154,7 +154,7 @@ export class Blackbox {
       this.options.credentials,
       {env: this.options.env} as AuthOptions,
     );
-    const accessToken = authenticate.data.tokens.access_token;
+    const accessToken = authenticate.access_token;
 
     const queryPayloadsURL = getPayloadsURL(params, this.options);
     const queryPayloadsResponse = await got.get(queryPayloadsURL, {
@@ -181,7 +181,7 @@ export class Blackbox {
       this.options.credentials,
       {env: this.options.env} as AuthOptions,
     );
-    const accessToken = authenticate.data.tokens.access_token;
+    const accessToken = authenticate.access_token;
 
     const baseUrl = `${getAPIURL(this.options)}/payloads`;
     await got.post(baseUrl, {
@@ -200,7 +200,7 @@ export class Blackbox {
       this.options.credentials,
       {env: this.options.env} as AuthOptions,
     );
-    const accessToken = authenticate.data.tokens.access_token;
+    const accessToken = authenticate.access_token;
 
     const baseUrl = `${getAPIURL(this.options)}/payloads`;
     const getPayloadURL = `${baseUrl}/${params.id}`;
@@ -232,7 +232,7 @@ export class Blackbox {
       this.options.credentials,
       {env: this.options.env} as AuthOptions,
     );
-    const accessToken = authenticate.data.tokens.access_token;
+    const accessToken = authenticate.access_token;
 
     const querySubscribersURL = getSubscribersURL(params, this.options);
     const querySubscribersResponse = await got.get(querySubscribersURL, {
@@ -258,7 +258,7 @@ export class Blackbox {
       this.options.credentials,
       {env: this.options.env} as AuthOptions,
     );
-    const accessToken = authenticate.data.tokens.access_token;
+    const accessToken = authenticate.access_token;
 
     const baseUrl = `${getAPIURL(this.options)}/accounts`;
     const deleteSubscriberURL = `${baseUrl}/${id}`;

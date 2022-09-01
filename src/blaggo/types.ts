@@ -1,15 +1,8 @@
 export interface AuthenticationResponse {
-  data: Data
-}
-
-export interface Data {
-  token: string
-  tokens: Tokens
-  user_id: string
-  first_login: boolean
-  tfa: boolean
-  is_mobile_allowed: boolean
-  is_portal_allowed: boolean
+  access_token: string
+  refresh_token: string
+  expires_in: number
+  token_type: string
 }
 
 export interface Tokens {
@@ -27,17 +20,16 @@ export const Environments = {
   production: "prod",
 }
 
-export const AuthURLs = {
-  test: "https://authtest.blaggo.io/auth/",
-  stage: "https://authstage.blaggo.io/auth/",
-  prod: "https://auth.blaggo.io/auth/",
-}
-
 export const OAuth2URLs = {
-  test: "https://authtest.blaggo.io/oauth2/",
-  stage: "https://authstage.blaggo.io/oauth2/",
-  prod: "https://auth.blaggo.io/oauth2/",
+  test: "https://authtest.blaggo.io/oauth2/token/",
+  stage: "https://authstage.blaggo.io/oauth2/token/",
+  prod: "https://auth.blaggo.io/oauth2/token/",
 }
 
-export type AuthURLKey = keyof typeof AuthURLs;
 export type OAuth2URLKey = keyof typeof OAuth2URLs;
+
+export interface Credentials {
+  client_id: string
+  client_secret: string
+  grant_type: string
+}

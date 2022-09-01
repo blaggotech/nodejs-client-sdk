@@ -1,6 +1,9 @@
 import 'dotenv/config';
-import { AuthenticationResponse } from '../blaggo/types';
-import { Options as AuthOptions } from '../blaggo/types';
+import {
+  AuthenticationResponse,
+  Credentials,
+  Options as AuthOptions
+} from '../blaggo/types';
 
 export interface Options {
   env: string
@@ -15,11 +18,6 @@ export const APIURLs = {
 }
 
 export type APIURLKey = keyof typeof APIURLs;
-
-export interface Credentials {
-  username: string;
-  password: string;
-}
 
 export interface AddPayloadParameters {
   profile_id: string

@@ -3,6 +3,7 @@ import {
   Options,
 } from '../../blackbox/types';
 import {
+  Credentials,
   Environments,
   Options as AuthOptions,
 } from '../../blaggo/types';
@@ -13,40 +14,32 @@ import 'dotenv/config';
 
 const expect = chai.expect;
 
-const username = process.env["AUTH_USERNAME"] || "";
-const password = process.env["AUTH_PASSWORD"] || "";
+const clientId = process.env["CLIENT_ID"] || "";
+const clientSecret = process.env["CLIENT_SECRET"] || "";
 
 const options = {
   env: Environments.testing,
 } as Options;
 
-describe('Blaggo Password Authentication', () => {
-  expect(username).to.not.be.empty;
-	expect(password).to.not.be.empty;
+describe('Blaggo OAuth2 Authentication', () => {
+  expect(clientId).to.not.be.empty;
+	expect(clientSecret).to.not.be.empty;
 
-  it('should return a response if correct credentials are passed' , () => {
-    return new Promise((resolve, reject) => {
-      Authenticate(username, password, {env: options.env} as AuthOptions)
-      .then(response => {
-        expect(response).to.not.be.null;
-        resolve(response);
-      }).catch(error => {
-        reject(error);
-      });
-    });
+  const creds = {
+    client_id: clientId,
+    client_secret: clientSecret,
+    grant_type: "client_credentials",
+  } as Credentials
+
+  it('should return a response if correct credentials are passed', async () => {
+      const res = await Authenticate(creds, {env: options.env} as AuthOptions);
+      expect(res).to.not.be.null;
   });
 
-  it('should return auth tokens', () => {
-    return new Promise((resolve, reject) => {
-      Authenticate(username, password, {env: options.env} as AuthOptions)
-        .then(response => {
-          expect(response).to.not.be.null;
-          expect(response.data.tokens.access_token).to.not.be.empty;
-          resolve(response);
-        }).catch(error => {
-          reject(error);
-        });
-    });
+  it('should return auth tokens', async () => {
+      const res = await Authenticate(creds, {env: options.env} as AuthOptions);
+      expect(res).to.not.be.null;
+      expect(res.access_token).to.not.be.empty;
   });
 });
 
