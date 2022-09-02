@@ -77,7 +77,6 @@ export class Blackbox {
     );
 
     const accessToken = auth.access_token;
-    console.log(">>> [DEBUG] access token:", accessToken);
 
     const getMessagesUrl = getMessagesURL(params, this.options);
     const getMessageResponse = await got.get(getMessagesUrl, {

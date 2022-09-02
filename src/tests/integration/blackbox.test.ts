@@ -21,7 +21,6 @@ const clientSecret = process.env["CLIENT_SECRET"] || "";
 const credentials = {
   client_id: clientId,
   client_secret: clientSecret,
-  grant_type: "client_credentials",
 } as Credentials;
 
 describe('Blackbox Inbox Test', async () => {

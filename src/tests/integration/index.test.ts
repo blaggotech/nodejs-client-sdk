@@ -28,7 +28,6 @@ describe('Blaggo OAuth2 Authentication', () => {
   const creds = {
     client_id: clientId,
     client_secret: clientSecret,
-    grant_type: "client_credentials",
   } as Credentials
 
   it('should return a response if correct credentials are passed', async () => {

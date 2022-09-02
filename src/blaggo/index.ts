@@ -27,7 +27,7 @@ export async function Authenticate(creds: Credentials, options?: Options): Promi
     form: {
       client_id: creds.client_id,
       client_secret: creds.client_secret,
-      grant_type: creds.grant_type,
+      grant_type: "client_credentials",
     }
   }).json();
 

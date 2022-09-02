@@ -32,7 +32,6 @@
    const res = await blaggo.Authenticate({
     client_id: "API client id",
     client_secret: "API client secret",
-    grant_type: "client_credentials",
    }, options);
 
    console.log(res.data);
@@ -49,7 +48,6 @@
     credentials: {
      client_id: "API client id",
      client_secret: "API client secret",
-     grant_type: "client_credentials",
     }
    };
 
