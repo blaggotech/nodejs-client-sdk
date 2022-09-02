@@ -31,5 +31,4 @@ export type OAuth2URLKey = keyof typeof OAuth2URLs;
 export interface Credentials {
   client_id: string
   client_secret: string
-  grant_type: string
 }
